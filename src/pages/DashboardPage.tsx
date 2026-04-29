@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CalendarDays, MessageSquare, Users, Clock } from 'lucide-react';
+import { CalendarDays, MessageSquare, Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Appointment, ConsultThread } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';

@@ -3,7 +3,6 @@ import { ChevronRight, Send } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { ConsultThread, ConsultMessage } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
-import { Card } from '../components/ui/Card';
 import { UrgencyBadge, StatusBadge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 
