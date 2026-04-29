@@ -2,12 +2,21 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './lib/supabase';
+import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AppointmentsPage } from './pages/AppointmentsPage';
 import { ConsultsPage } from './pages/ConsultsPage';
 import { PatientsPage } from './pages/PatientsPage';
 import { SettingsPage } from './pages/SettingsPage';
+
+function Spinner() {
+  return (
+    <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="w-6 h-6 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   const [session, setSession] = useState<Session | null | undefined>(undefined);
@@ -18,27 +27,25 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Still checking auth
-  if (session === undefined) {
-    return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-purple border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!session) {
-    return <LoginPage />;
-  }
+  if (session === undefined) return <Spinner />;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/appointments" element={<AppointmentsPage />} />
-        <Route path="/consults" element={<ConsultsPage />} />
-        <Route path="/patients" element={<PatientsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        {/* Public */}
+        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/login"
+          element={session ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+        />
+
+        {/* Protected */}
+        <Route path="/dashboard" element={session ? <DashboardPage /> : <Navigate to="/login" replace />} />
+        <Route path="/appointments" element={session ? <AppointmentsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/consults" element={session ? <ConsultsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/patients" element={session ? <PatientsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/settings" element={session ? <SettingsPage /> : <Navigate to="/login" replace />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

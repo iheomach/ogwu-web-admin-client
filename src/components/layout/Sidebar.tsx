@@ -10,7 +10,7 @@ import {
 import { supabase } from '../../lib/supabase';
 
 const nav = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/appointments', label: 'Appointments', icon: CalendarDays },
   { to: '/consults', label: 'Consults', icon: MessageSquare },
   { to: '/patients', label: 'Patients', icon: Users },
