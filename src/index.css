@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI',
+      Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: #faf7fb;
+    color: #111111;
+  }
+}
+
+@layer components {
+  /* Glass surface — mirrors the mobile glass token */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(69, 0, 80, 0.11);
+    box-shadow: 0 4px 14px rgba(69, 0, 80, 0.07);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Solid white card */
+  .card {
+    background: #ffffff;
+    border: 1px solid rgba(69, 0, 80, 0.08);
+    box-shadow: 0 4px 14px rgba(69, 0, 80, 0.06);
+    border-radius: 20px;
+  }
+
+  /* Sidebar active item */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer;
+  }
+
+  .nav-item-active {
+    @apply text-white bg-white/15;
+  }
+
+  /* Brand mark — mirrors the mobile brandName style */
+  .brand-mark {
+    @apply text-[11px] font-semibold tracking-[2px] uppercase text-purple;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(69, 0, 80, 0.15); border-radius: 9999px; }
