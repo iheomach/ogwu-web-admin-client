@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronRight, Send } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useHospital } from '../lib/useHospital';
 import type { ConsultThread, ConsultMessage } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { UrgencyBadge, StatusBadge } from '../components/ui/Badge';
@@ -13,6 +14,7 @@ function formatDate(iso: string) {
 }
 
 export function ConsultsPage() {
+  const { hospitalId, loading: hospitalLoading } = useHospital();
   const [threads, setThreads] = useState<ConsultThread[]>([]);
   const [selected, setSelected] = useState<ConsultThread | null>(null);
   const [messages, setMessages] = useState<ConsultMessage[]>([]);
@@ -21,16 +23,18 @@ export function ConsultsPage() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
+    if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
       const { data } = await supabase
         .from('consult_threads')
         .select('*, patient:profiles(first_name, last_name, phone)')
+        .eq('hospital_id', hospitalId)
         .order('updated_at', { ascending: false });
       if (mounted) { setThreads(data ?? []); setLoading(false); }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [hospitalId, hospitalLoading]);
 
   const openThread = async (thread: ConsultThread) => {
     setSelected(thread);

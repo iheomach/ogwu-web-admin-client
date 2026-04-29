@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CalendarDays, MessageSquare, Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useHospital } from '../lib/useHospital';
 import type { Appointment, ConsultThread } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { Card, CardHeader } from '../components/ui/Card';
@@ -44,11 +45,13 @@ function formatDateTime(iso: string): string {
 }
 
 export function DashboardPage() {
+  const { hospitalId, loading: hospitalLoading } = useHospital();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [consults, setConsults] = useState<ConsultThread[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
       const today = new Date();
@@ -58,12 +61,14 @@ export function DashboardPage() {
         supabase
           .from('appointments')
           .select('*, patient:profiles(first_name, last_name, phone)')
+          .eq('hospital_id', hospitalId)
           .gte('starts_at', today.toISOString())
           .order('starts_at', { ascending: true })
           .limit(5),
         supabase
           .from('consult_threads')
           .select('*, patient:profiles(first_name, last_name, phone)')
+          .eq('hospital_id', hospitalId)
           .eq('status', 'open')
           .order('created_at', { ascending: false })
           .limit(5),
@@ -75,7 +80,7 @@ export function DashboardPage() {
       setLoading(false);
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [hospitalId, hospitalLoading]);
 
   const todayCount = appointments.filter(a => {
     const d = new Date(a.starts_at);

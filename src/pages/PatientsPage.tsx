@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useHospital } from '../lib/useHospital';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
 import { UrgencyBadge } from '../components/ui/Badge';
@@ -27,21 +28,37 @@ function computeAge(dob: string | null): string {
 }
 
 export function PatientsPage() {
+  const { hospitalId, loading: hospitalLoading } = useHospital();
   const [patients, setPatients] = useState<PatientRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
+      // Get the distinct patient IDs who have interacted with this hospital
+      const { data: apptRows } = await supabase
+        .from('appointments')
+        .select('patient_id')
+        .eq('hospital_id', hospitalId);
+
+      const patientIds = [...new Set((apptRows ?? []).map(r => r.patient_id))];
+      if (!patientIds.length) {
+        if (mounted) { setPatients([]); setLoading(false); }
+        return;
+      }
+
       const { data } = await supabase
         .from('profiles')
         .select('id, first_name, last_name, phone, biological_sex, dob, triage_intakes(urgency, summary, updated_at)')
+        .in('id', patientIds)
         .order('created_at', { ascending: false });
+
       if (mounted) { setPatients(data ?? []); setLoading(false); }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [hospitalId, hospitalLoading]);
 
   const filtered = patients.filter(p => {
     const name = `${p.first_name ?? ''} ${p.last_name ?? ''}`.toLowerCase();

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Video } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useHospital } from '../lib/useHospital';
 import type { Appointment } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
@@ -18,16 +19,19 @@ function formatDateTime(iso: string): string {
 }
 
 export function AppointmentsPage() {
+  const { hospitalId, loading: hospitalLoading } = useHospital();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
+    if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
       const { data } = await supabase
         .from('appointments')
         .select('*, patient:profiles(first_name, last_name, phone)')
+        .eq('hospital_id', hospitalId)
         .order('starts_at', { ascending: true });
       if (mounted) {
         setAppointments(data ?? []);
@@ -35,7 +39,7 @@ export function AppointmentsPage() {
       }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [hospitalId, hospitalLoading]);
 
   const updateStatus = async (id: string, status: Appointment['status']) => {
     setUpdating(id);
