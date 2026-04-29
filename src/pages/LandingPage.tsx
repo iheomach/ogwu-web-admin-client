@@ -79,13 +79,22 @@ function Navbar() {
         </nav>
 
         {/* CTA */}
-        <button
-          onClick={() => navigate('/login')}
-          className="text-sm font-semibold px-5 py-2 rounded-md transition-opacity hover:opacity-90"
-          style={{ background: C.primary, color: '#fff' }}
-        >
-          Request access
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/login')}
+            className="text-sm font-medium transition-opacity hover:opacity-70"
+            style={{ color: C.body }}
+          >
+            Sign in
+          </button>
+          <button
+            onClick={() => document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })}
+            className="text-sm font-semibold px-5 py-2 rounded-md transition-opacity hover:opacity-90"
+            style={{ background: C.primary, color: '#fff' }}
+          >
+            Request access
+          </button>
+        </div>
       </div>
     </header>
   );
