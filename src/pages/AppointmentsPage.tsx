@@ -18,11 +18,53 @@ function formatDateTime(iso: string): string {
   });
 }
 
+function CancelDialog({
+  appointment,
+  onConfirm,
+  onDismiss,
+  loading,
+}: {
+  appointment: Appointment;
+  onConfirm: () => void;
+  onDismiss: () => void;
+  loading: boolean;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-grey-900/30 backdrop-blur-sm"
+        onClick={onDismiss}
+      />
+      {/* Dialog */}
+      <div className="relative card p-6 w-full max-w-sm">
+        <h2 className="text-base font-bold text-grey-900 mb-1">Cancel appointment?</h2>
+        <p className="text-sm text-grey-500 mb-6">
+          This will cancel the appointment for{' '}
+          <span className="font-medium text-grey-900">
+            {appointment.patient?.first_name} {appointment.patient?.last_name}
+          </span>{' '}
+          on {formatDateTime(appointment.starts_at)}. This cannot be undone.
+        </p>
+        <div className="flex gap-3 justify-end">
+          <Button variant="ghost" size="sm" onClick={onDismiss} disabled={loading}>
+            Keep
+          </Button>
+          <Button variant="destructive" size="sm" loading={loading} onClick={onConfirm}>
+            Yes, cancel
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppointmentsPage() {
   const { hospitalId, loading: hospitalLoading } = useHospital();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
 
   useEffect(() => {
     if (hospitalLoading || !hospitalId) return;
@@ -50,12 +92,26 @@ export function AppointmentsPage() {
       .select()
       .single();
     if (data) {
-      setAppointments(prev => prev.map(a => (a.id === id ? { ...a, status } : a)));
+      if (status === 'cancelled') {
+        setAppointments(prev => prev.filter(a => a.id !== id));
+      } else {
+        setAppointments(prev => prev.map(a => (a.id === id ? { ...a, status } : a)));
+      }
     }
     setUpdating(null);
+    setCancelTarget(null);
   };
 
   return (
+    <>
+    {cancelTarget && (
+      <CancelDialog
+        appointment={cancelTarget}
+        loading={updating === cancelTarget.id}
+        onConfirm={() => updateStatus(cancelTarget.id, 'cancelled')}
+        onDismiss={() => setCancelTarget(null)}
+      />
+    )}
     <AppShell>
       <PageHeader
         title="Appointments"
@@ -132,8 +188,7 @@ export function AppointmentsPage() {
                         <Button
                           variant="destructive"
                           size="sm"
-                          loading={updating === a.id}
-                          onClick={() => updateStatus(a.id, 'cancelled')}
+                          onClick={() => setCancelTarget(a)}
                         >
                           Cancel
                         </Button>
@@ -147,5 +202,6 @@ export function AppointmentsPage() {
         )}
       </Card>
     </AppShell>
+    </>
   );
 }
