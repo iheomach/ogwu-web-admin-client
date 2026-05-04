@@ -48,10 +48,7 @@ function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
-          <div className="w-2 h-2 rounded-full" style={{ background: C.primary }} />
-          <span className="text-[13px] font-bold tracking-[2.5px] uppercase" style={{ color: C.primary }}>
-            Ogwu
-          </span>
+          <img src="/ogwu-logo.svg" alt="Ogwu" width={32} height={32} style={{ borderRadius: 7, display: 'block' }} />
           <span
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full tracking-wide"
             style={{ background: C.accentLight, color: C.primary }}
@@ -555,11 +552,10 @@ function Footer() {
     <footer className="py-10 px-6 border-t" style={{ borderColor: 'rgba(69,0,80,0.07)' }}>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col items-center md:items-start gap-1">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: C.primary }} />
-            <span className="text-[12px] font-bold tracking-[2px] uppercase" style={{ color: C.primary }}>Ogwu</span>
+          <div className="flex items-center gap-2.5">
+            <img src="/ogwu-logo.svg" alt="Ogwu" width={28} height={28} style={{ borderRadius: 6, display: 'block' }} />
           </div>
-          <p className="text-xs" style={{ color: C.body }}>AI-powered triage for modern healthcare.</p>
+          <p className="text-xs mt-1" style={{ color: C.body }}>AI-powered triage for modern healthcare.</p>
         </div>
 
         <div className="flex items-center gap-6 text-xs" style={{ color: C.body }}>

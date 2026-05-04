@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { supabase } from '../lib/supabase';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { OgwuLogo } from '../components/ui/OgwuLogo';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -26,11 +27,8 @@ export function LoginPage() {
       <div className="w-full max-w-sm">
 
         {/* Brand */}
-        <div className="flex items-center gap-2 mb-10">
-          <div className="w-2 h-2 rounded-full bg-purple" />
-          <span className="text-[13px] font-semibold tracking-[2px] uppercase text-purple">
-            Ogwu
-          </span>
+        <div className="mb-10">
+          <OgwuLogo size={52} />
         </div>
 
         <h1 className="text-[28px] font-bold text-grey-900 tracking-[-0.5px] mb-1">
