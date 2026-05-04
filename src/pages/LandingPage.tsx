@@ -182,7 +182,6 @@ function Hero() {
               {/* Sidebar */}
               <div className="w-48 shrink-0 p-4 flex flex-col gap-1" style={{ background: C.primary }}>
                 <div className="flex items-center gap-2 px-2 py-2 mb-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/70" />
                   <span className="text-[11px] font-bold tracking-[2px] uppercase text-white/80">Ogwu</span>
                 </div>
                 {['Dashboard', 'Appointments', 'Consults', 'Patients'].map((item, i) => (
