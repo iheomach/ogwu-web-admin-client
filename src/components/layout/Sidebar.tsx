@@ -25,11 +25,11 @@ export function Sidebar() {
   return (
     <aside className="w-60 shrink-0 bg-purple flex flex-col h-screen sticky top-0">
       {/* Brand */}
-      <div className="px-6 py-5 border-b border-purple/10 bg-white">
+      <div className="px-5 py-4 border-b border-purple/10 bg-white">
         <img
           src="/ogwu-logo-horizontal.png"
           alt="Ogwu"
-          style={{ height: 32, width: 'auto', display: 'block' }}
+          style={{ height: 26, width: 'auto', display: 'block' }}
         />
       </div>
 
