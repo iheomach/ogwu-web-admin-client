@@ -48,7 +48,7 @@ function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
-          <img src="/ogwu-logo-horizontal.png" alt="Ogwu" height={32} style={{ display: 'block' }} />
+          <img src="/ogwu-logo-horizontal.png" alt="Ogwu" style={{ height: 28, width: 'auto', display: 'block' }} />
           <span
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full tracking-wide"
             style={{ background: C.accentLight, color: C.primary }}
@@ -552,7 +552,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col items-center md:items-start gap-1">
           <div className="flex items-center gap-2.5">
-            <img src="/ogwu-logo-mark.png" alt="Ogwu" width={28} height={28} style={{ display: 'block' }} />
+            <img src="/ogwu-logo-mark.png" alt="Ogwu" style={{ width: 24, height: 24, display: 'block' }} />
           </div>
           <p className="text-xs mt-1" style={{ color: C.body }}>AI-powered triage for modern healthcare.</p>
         </div>
