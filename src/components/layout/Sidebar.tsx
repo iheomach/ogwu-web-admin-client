@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { OgwuLogo } from '../ui/OgwuLogo';
 import {
   LayoutDashboard,
   CalendarDays,
@@ -26,14 +25,12 @@ export function Sidebar() {
   return (
     <aside className="w-60 shrink-0 bg-purple flex flex-col h-screen sticky top-0">
       {/* Brand */}
-      <div className="px-6 py-7 border-b border-white/10">
-        <div className="flex items-center gap-3">
-          <OgwuLogo size={32} />
-          <div>
-            <p className="text-[13px] font-semibold tracking-[2px] uppercase text-white/90 leading-none">Ogwu</p>
-            <p className="text-[11px] text-white/40 mt-1 tracking-wide">Hospital Portal</p>
-          </div>
-        </div>
+      <div className="px-6 py-5 border-b border-purple/10 bg-white">
+        <img
+          src="/ogwu-logo-horizontal.png"
+          alt="Ogwu"
+          style={{ height: 32, width: 'auto', display: 'block' }}
+        />
       </div>
 
       {/* Nav */}
