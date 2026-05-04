@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, Calendar, User, Activity, Clock } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Activity, Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { AppShell } from '../components/layout/AppShell';
 import { Card, CardHeader } from '../components/ui/Card';
