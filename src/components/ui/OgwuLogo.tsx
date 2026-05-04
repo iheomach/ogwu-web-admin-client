@@ -1,7 +1,7 @@
 export function OgwuLogo({ size = 36 }: { size?: number }) {
   return (
     <img
-      src="/ogwu-logo.svg"
+      src="/ogwu-logo-ios.png"
       alt="Ogwu"
       width={size}
       height={size}
