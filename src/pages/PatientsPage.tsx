@@ -4,6 +4,7 @@ import { useHospital } from '../lib/useHospital';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { Card } from '../components/ui/Card';
 import { UrgencyBadge } from '../components/ui/Badge';
+import { PatientAvatar } from '../components/ui/PatientAvatar';
 
 type PatientRow = {
   id: string;
@@ -102,8 +103,8 @@ export function PatientsPage() {
                 const intake = p.triage_intakes?.[0];
                 return (
                   <tr key={p.id} className="border-b border-purple/[0.04] last:border-0">
-                    <td className="py-3.5 pr-4 font-medium text-grey-900">
-                      {p.first_name} {p.last_name}
+                    <td className="py-3.5 pr-4">
+                      <PatientAvatar patientId={p.id} firstName={p.first_name} lastName={p.last_name} />
                     </td>
                     <td className="py-3.5 pr-4 text-grey-700">{p.phone ?? '—'}</td>
                     <td className="py-3.5 pr-4 text-grey-700">{computeAge(p.dob)}</td>

@@ -8,6 +8,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { AppointmentsPage } from './pages/AppointmentsPage';
 import { ConsultsPage } from './pages/ConsultsPage';
 import { PatientsPage } from './pages/PatientsPage';
+import { PatientProfilePage } from './pages/PatientProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 
 function Spinner() {
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/appointments" element={session ? <AppointmentsPage /> : <Navigate to="/login" replace />} />
         <Route path="/consults" element={session ? <ConsultsPage /> : <Navigate to="/login" replace />} />
         <Route path="/patients" element={session ? <PatientsPage /> : <Navigate to="/login" replace />} />
+        <Route path="/patients/:id" element={session ? <PatientProfilePage /> : <Navigate to="/login" replace />} />
         <Route path="/settings" element={session ? <SettingsPage /> : <Navigate to="/login" replace />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
