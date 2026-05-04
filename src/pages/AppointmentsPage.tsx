@@ -97,8 +97,10 @@ export function AppointmentsPage() {
 
   const updateStatus = async (id: string, status: Appointment['status']) => {
     setUpdating(id);
-    const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
-    if (error) console.error('Failed to update appointment:', error.message);
+    const { data: updated, error } = await supabase
+      .from('appointments').update({ status }).eq('id', id).select('id, status');
+    if (error) console.error('Update error:', error.message);
+    else console.log('Rows updated:', updated);
     if (status === 'cancelled') {
       setAppointments(prev => prev.filter(a => a.id !== id));
     } else {
