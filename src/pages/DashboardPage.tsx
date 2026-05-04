@@ -7,24 +7,30 @@ import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { Card, CardHeader } from '../components/ui/Card';
 import { UrgencyBadge, StatusBadge } from '../components/ui/Badge';
 
+const statVariants = {
+  default: { box: 'bg-purple/[0.07]', icon: '#450050' },
+  orange:  { box: 'bg-urgent/[0.07]', icon: '#F97316' },
+  green:   { box: 'bg-success/[0.07]', icon: '#16A34A' },
+} as const;
+
+type StatVariant = keyof typeof statVariants;
+
 function StatCard({
   label,
   value,
   icon: Icon,
-  accent,
+  variant = 'default',
 }: {
   label: string;
   value: number | string;
   icon: React.ElementType;
-  accent?: string;
+  variant?: StatVariant;
 }) {
+  const v = statVariants[variant];
   return (
     <div className="card p-6 flex items-center gap-4">
-      <div
-        className="w-11 h-11 rounded-md flex items-center justify-center shrink-0"
-        style={{ backgroundColor: accent ? `${accent}15` : 'rgba(69,0,80,0.07)' }}
-      >
-        <Icon size={20} color={accent ?? '#450050'} strokeWidth={1.8} />
+      <div className={`stat-icon-box ${v.box}`}>
+        <Icon size={20} color={v.icon} strokeWidth={1.8} />
       </div>
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.8px] text-grey-500">{label}</p>
@@ -95,8 +101,8 @@ export function DashboardPage() {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         <StatCard label="Today's appointments" value={loading ? '—' : todayCount} icon={CalendarDays} />
-        <StatCard label="Open consults" value={loading ? '—' : consults.length} icon={MessageSquare} accent="#F97316" />
-        <StatCard label="Upcoming (7 days)" value={loading ? '—' : appointments.length} icon={Clock} accent="#16A34A" />
+        <StatCard label="Open consults" value={loading ? '—' : consults.length} icon={MessageSquare} variant="orange" />
+        <StatCard label="Upcoming (7 days)" value={loading ? '—' : appointments.length} icon={Clock} variant="green" />
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -106,7 +112,7 @@ export function DashboardPage() {
           <CardHeader title="Upcoming appointments" />
           {loading ? (
             <div className="flex justify-center py-8">
-              <div className="w-5 h-5 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+              <div className="spinner spinner--md" />
             </div>
           ) : appointments.length === 0 ? (
             <p className="text-sm text-grey-500 py-4">No upcoming appointments.</p>
@@ -132,7 +138,7 @@ export function DashboardPage() {
           <CardHeader title="Open consults" />
           {loading ? (
             <div className="flex justify-center py-8">
-              <div className="w-5 h-5 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+              <div className="spinner spinner--md" />
             </div>
           ) : consults.length === 0 ? (
             <p className="text-sm text-grey-500 py-4">No open consults.</p>

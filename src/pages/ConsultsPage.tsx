@@ -86,7 +86,7 @@ export function ConsultsPage() {
         <div className="w-72 shrink-0 flex flex-col gap-2 overflow-y-auto pr-1">
           {loading ? (
             <div className="flex justify-center pt-8">
-              <div className="w-5 h-5 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+              <div className="spinner spinner--md" />
             </div>
           ) : threads.length === 0 ? (
             <p className="text-sm text-grey-500 pt-4">No consult threads yet.</p>
@@ -145,35 +145,31 @@ export function ConsultsPage() {
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-3">
-                {messages.map(m => (
-                  <div
-                    key={m.id}
-                    className={['flex', m.sender_role === 'provider' ? 'justify-end' : 'justify-start'].join(' ')}
-                  >
-                    <div
-                      className={[
-                        'max-w-[70%] px-4 py-2.5 rounded-lg text-sm',
-                        m.sender_role === 'provider'
-                          ? 'bg-purple text-white'
-                          : m.sender_role === 'system'
-                          ? 'bg-grey-100 text-grey-500 text-xs italic'
-                          : 'glass text-grey-900',
-                      ].join(' ')}
-                    >
-                      <p className="leading-relaxed">{m.body}</p>
-                      <p className={['text-[10px] mt-1', m.sender_role === 'provider' ? 'text-white/50' : 'text-grey-300'].join(' ')}>
-                        {formatDate(m.created_at)}
-                      </p>
+                {messages.map(m => {
+                  const isProvider = m.sender_role === 'provider';
+                  const isSystem   = m.sender_role === 'system';
+                  return (
+                    <div key={m.id} className={`flex ${isProvider ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`chat-bubble ${
+                        isProvider ? 'chat-bubble--provider' :
+                        isSystem   ? 'chat-bubble--system'   :
+                                     'chat-bubble--patient'
+                      }`}>
+                        <p className="leading-relaxed">{m.body}</p>
+                        <p className={`chat-bubble-meta ${isProvider ? 'chat-bubble-meta--provider' : 'chat-bubble-meta--other'}`}>
+                          {formatDate(m.created_at)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Reply input */}
               {selected.status === 'open' && (
                 <div className="px-6 py-4 border-t border-purple/[0.08] flex gap-3 items-end">
                   <textarea
-                    className="flex-1 glass rounded-md px-4 py-3 text-sm text-grey-900 placeholder:text-grey-300 outline-none focus:border-purple focus:border-[1.5px] resize-none transition-colors"
+                    className="reply-textarea"
                     rows={2}
                     placeholder="Write a reply..."
                     value={reply}

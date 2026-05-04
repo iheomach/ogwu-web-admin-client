@@ -1,0 +1,300 @@
+/* ─── Landing Page Styles ───────────────────────────────────────────────────
+   All visual rules for LandingPage.tsx live here.
+   TSX file contains only structure, data, and event logic.
+──────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Layout ──────────────────────────────────────────────────────────────── */
+
+.lp-root {
+  background: #FAF7FB;
+}
+
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+
+.lp-navbar {
+  @apply fixed top-0 left-0 right-0 z-50 transition-all duration-300;
+  border-bottom: 1px solid transparent;
+}
+
+.lp-navbar--scrolled {
+  background: rgba(250, 247, 251, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: rgba(69, 0, 80, 0.07);
+}
+
+.lp-nav-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.lp-for-hospitals-badge {
+  @apply text-[10px] font-semibold px-2 py-0.5 rounded-full tracking-wide;
+  background: #F3EAF4;
+  color: #450050;
+}
+
+.lp-nav-link {
+  @apply text-sm font-medium transition-colors hover:opacity-100;
+  color: #5A5A72;
+}
+
+.lp-nav-signin {
+  @apply text-sm font-medium transition-opacity hover:opacity-70;
+  color: #5A5A72;
+}
+
+.lp-nav-cta {
+  @apply text-sm font-semibold px-5 py-2 rounded-md transition-opacity hover:opacity-90;
+  background: #450050;
+  color: #fff;
+}
+
+/* ─── Buttons (reused across sections) ───────────────────────────────────── */
+
+.lp-btn-primary {
+  @apply text-sm font-semibold px-7 py-3 rounded-md transition-opacity hover:opacity-90;
+  background: #450050;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(69, 0, 80, 0.28);
+}
+
+.lp-btn-outline {
+  @apply text-sm font-semibold px-7 py-3 rounded-md border transition-colors hover:bg-purple-light;
+  color: #450050;
+  border-color: rgba(69, 0, 80, 0.2);
+}
+
+/* ─── Hero ────────────────────────────────────────────────────────────────── */
+
+.lp-hero-glow {
+  @apply absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full pointer-events-none;
+  background: radial-gradient(ellipse at center, rgba(69, 0, 80, 0.10) 0%, transparent 70%);
+  filter: blur(40px);
+}
+
+.lp-mockup-glow {
+  @apply absolute inset-0 rounded-2xl pointer-events-none;
+  background: radial-gradient(ellipse at 50% 80%, rgba(69, 0, 80, 0.14) 0%, transparent 70%);
+  filter: blur(24px);
+  transform: translateY(12px);
+}
+
+.lp-browser-frame {
+  @apply relative rounded-2xl overflow-hidden text-left;
+  border: 1px solid rgba(69, 0, 80, 0.12);
+  box-shadow: 0 24px 60px rgba(69, 0, 80, 0.14);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.lp-browser-chrome {
+  @apply px-4 py-3 border-b flex items-center gap-2;
+  border-color: rgba(69, 0, 80, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.lp-browser-addressbar {
+  @apply flex-1 mx-3 h-6 rounded text-[11px] flex items-center px-3;
+  background: rgba(69, 0, 80, 0.05);
+  color: #5A5A72;
+}
+
+.lp-mock-sidebar {
+  @apply w-48 shrink-0 p-4 flex flex-col gap-1;
+  background: #450050;
+}
+
+.lp-mock-main {
+  @apply flex-1 p-5;
+  background: #FAF7FB;
+}
+
+.lp-mock-stat-card {
+  @apply rounded-lg p-3;
+  background: #fff;
+  border: 1px solid rgba(69, 0, 80, 0.07);
+}
+
+.lp-mock-table {
+  @apply rounded-lg overflow-hidden;
+  background: #fff;
+  border: 1px solid rgba(69, 0, 80, 0.07);
+}
+
+.lp-mock-table-row {
+  @apply flex items-center justify-between px-3 py-2 border-b last:border-0 text-[10px];
+  border-color: rgba(69, 0, 80, 0.05);
+  color: #5A5A72;
+}
+
+.lp-mock-badge {
+  @apply px-2 py-0.5 rounded-full text-[9px];
+  background: #F3EAF4;
+  color: #450050;
+}
+
+.lp-mock-nav-item {
+  @apply flex items-center gap-2 px-3 py-2 rounded text-[11px] font-medium;
+}
+
+.lp-mock-nav-item--active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.lp-mock-nav-item--inactive {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ─── Section typography ──────────────────────────────────────────────────── */
+
+.lp-eyebrow {
+  @apply text-xs font-bold tracking-[2px] uppercase mb-3;
+  color: #450050;
+}
+
+.lp-section-heading {
+  @apply text-4xl font-bold tracking-[-1px];
+  color: #1A1A2E;
+}
+
+/* ─── Stats Bar ───────────────────────────────────────────────────────────── */
+
+.lp-stats-bar {
+  background: #F3EAF4;
+}
+
+.lp-stat-value {
+  @apply text-2xl font-bold tracking-tight mb-1;
+  color: #450050;
+}
+
+.lp-stat-label {
+  @apply text-sm;
+  color: #5A5A72;
+}
+
+/* ─── Feature cards ───────────────────────────────────────────────────────── */
+
+.lp-feature-card {
+  @apply p-6 rounded-2xl transition-shadow hover:shadow-md;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(69, 0, 80, 0.08);
+  box-shadow: 0 4px 14px rgba(69, 0, 80, 0.05);
+}
+
+.lp-feature-icon-box {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center mb-4;
+  background: #F3EAF4;
+}
+
+/* ─── How It Works ────────────────────────────────────────────────────────── */
+
+.lp-hiw-section {
+  background: #F3EAF4;
+}
+
+.lp-step-connector {
+  @apply absolute top-5 left-0 right-0 h-px;
+  background: rgba(69, 0, 80, 0.15);
+  z-index: 0;
+}
+
+.lp-step-number {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold mb-4 shrink-0;
+  background: #450050;
+  color: #fff;
+}
+
+.lp-step-number--sm {
+  @apply w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold shrink-0;
+  background: #450050;
+  color: #fff;
+}
+
+/* ─── Testimonial ─────────────────────────────────────────────────────────── */
+
+.lp-quote-card {
+  @apply p-10 rounded-2xl;
+  background: #F3EAF4;
+  border: 1px solid rgba(69, 0, 80, 0.10);
+}
+
+.lp-avatar-initial {
+  @apply w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white;
+  background: #450050;
+}
+
+/* ─── CTA / Form section ──────────────────────────────────────────────────── */
+
+.lp-cta-section {
+  background: #F3EAF4;
+}
+
+.lp-form-card {
+  @apply rounded-2xl p-8 flex flex-col gap-4;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(69, 0, 80, 0.09);
+  box-shadow: 0 8px 28px rgba(69, 0, 80, 0.07);
+}
+
+.lp-form-label {
+  @apply block text-xs font-semibold mb-1.5;
+  color: #1A1A2E;
+}
+
+.lp-form-input {
+  @apply w-full text-sm outline-none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(69, 0, 80, 0.14);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #1A1A2E;
+}
+
+.lp-form-submit {
+  @apply mt-2 py-3 rounded-md text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-60;
+  background: #450050;
+  color: #fff;
+}
+
+.lp-success-card {
+  @apply text-center p-10 rounded-2xl;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(69, 0, 80, 0.1);
+}
+
+.lp-success-icon {
+  @apply w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4;
+  background: #450050;
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
+
+.lp-footer {
+  @apply py-10 px-6 border-t;
+  border-color: rgba(69, 0, 80, 0.07);
+}
+
+.lp-footer-mark {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* ─── Text helpers ────────────────────────────────────────────────────────── */
+
+.lp-text-heading { color: #1A1A2E; }
+.lp-text-body    { color: #5A5A72; }

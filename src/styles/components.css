@@ -1,0 +1,85 @@
+/* ─── Shared Component Styles ───────────────────────────────────────────────
+   Reusable patterns extracted from pages to avoid repetition.
+   TSX files reference these class names only.
+──────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Loading Spinner ─────────────────────────────────────────────────────── */
+
+.spinner {
+  @apply border-2 border-purple border-t-transparent rounded-full animate-spin;
+}
+
+.spinner--sm  { @apply w-4 h-4; }
+.spinner--md  { @apply w-5 h-5; }
+.spinner--lg  { @apply w-6 h-6; }
+
+/* ─── Table ───────────────────────────────────────────────────────────────── */
+
+.table-th {
+  @apply text-left text-[11px] font-semibold uppercase tracking-[0.8px] text-grey-500 pb-3 pr-4;
+}
+
+.table-thead-row {
+  @apply border-b border-purple/[0.08];
+}
+
+.table-tbody-row {
+  @apply border-b border-purple/[0.04] last:border-0;
+}
+
+/* ─── Search input ────────────────────────────────────────────────────────── */
+
+.search-input {
+  @apply glass rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none
+         placeholder:text-grey-300 transition-colors
+         focus:border-purple focus:border-[1.5px];
+}
+
+/* ─── Stat card icon box ──────────────────────────────────────────────────── */
+
+.stat-icon-box {
+  @apply w-11 h-11 rounded-md flex items-center justify-center shrink-0;
+}
+
+/* ─── Empty / loading state wrappers ─────────────────────────────────────── */
+
+.page-loading {
+  @apply flex justify-center py-12;
+}
+
+.page-empty {
+  @apply text-center py-12;
+}
+
+/* ─── Consult message bubbles ─────────────────────────────────────────────── */
+
+.chat-bubble {
+  @apply max-w-[70%] px-4 py-2.5 rounded-lg text-sm;
+}
+
+.chat-bubble--provider {
+  @apply bg-purple text-white;
+}
+
+.chat-bubble--patient {
+  @apply glass text-grey-900;
+}
+
+.chat-bubble--system {
+  @apply bg-grey-100 text-grey-500 text-xs italic;
+}
+
+.chat-bubble-meta {
+  @apply text-[10px] mt-1;
+}
+
+.chat-bubble-meta--provider { @apply text-white/50; }
+.chat-bubble-meta--other    { @apply text-grey-300; }
+
+/* ─── Consult reply textarea ──────────────────────────────────────────────── */
+
+.reply-textarea {
+  @apply flex-1 glass rounded-md px-4 py-3 text-sm text-grey-900
+         placeholder:text-grey-300 outline-none resize-none transition-colors
+         focus:border-purple focus:border-[1.5px];
+}

@@ -76,23 +76,23 @@ export function PatientsPage() {
           placeholder="Search by name or phone..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="glass rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none focus:border-purple focus:border-[1.5px] placeholder:text-grey-300 transition-colors"
+          className="search-input"
         />
       </div>
 
       <Card>
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+          <div className="page-loading">
+            <div className="spinner spinner--lg" />
           </div>
         ) : filtered.length === 0 ? (
           <p className="text-sm text-grey-500 py-8 text-center">No patients found.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-purple/[0.08]">
+              <tr className="table-thead-row">
                 {['Name', 'Phone', 'Age', 'Sex', 'Triage status', 'Last intake'].map(h => (
-                  <th key={h} className="text-left text-[11px] font-semibold uppercase tracking-[0.8px] text-grey-500 pb-3 pr-4">
+                  <th key={h} className="table-th">
                     {h}
                   </th>
                 ))}
@@ -102,7 +102,7 @@ export function PatientsPage() {
               {filtered.map(p => {
                 const intake = p.triage_intakes?.[0];
                 return (
-                  <tr key={p.id} className="border-b border-purple/[0.04] last:border-0">
+                  <tr key={p.id} className="table-tbody-row">
                     <td className="py-3.5 pr-4">
                       <PatientAvatar patientId={p.id} firstName={p.first_name} lastName={p.last_name} />
                     </td>

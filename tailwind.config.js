@@ -21,6 +21,12 @@ export default {
         warning: { DEFAULT: '#F59E0B', light: 'rgba(245,158,11,0.07)' },
         urgent: { DEFAULT: '#F97316', light: 'rgba(249,115,22,0.07)' },
         success: { DEFAULT: '#16A34A', light: 'rgba(22,163,74,0.07)' },
+        /* Landing-page specific tokens */
+        lp: {
+          heading: '#1A1A2E',
+          body: '#5A5A72',
+          accent: '#F3EAF4',
+        },
       },
       borderRadius: {
         sm: '8px',

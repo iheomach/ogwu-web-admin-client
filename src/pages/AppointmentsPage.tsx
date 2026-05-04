@@ -128,8 +128,8 @@ export function AppointmentsPage() {
 
         <Card>
           {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="w-6 h-6 border-2 border-purple border-t-transparent rounded-full animate-spin" />
+            <div className="page-loading">
+              <div className="spinner spinner--lg" />
             </div>
           ) : appointments.length === 0 ? (
             <div className="text-center py-12">
@@ -139,9 +139,9 @@ export function AppointmentsPage() {
           ) : (
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-purple/[0.08]">
+                <tr className="table-thead-row">
                   {['Patient', 'Date & time', 'Duration', 'Status', 'Meet', ''].map(h => (
-                    <th key={h} className="text-left text-[11px] font-semibold uppercase tracking-[0.8px] text-grey-500 pb-3 pr-4">
+                    <th key={h} className="table-th">
                       {h}
                     </th>
                   ))}
@@ -149,7 +149,7 @@ export function AppointmentsPage() {
               </thead>
               <tbody>
                 {appointments.map(a => (
-                  <tr key={a.id} className="border-b border-purple/[0.04] last:border-0">
+                  <tr key={a.id} className="table-tbody-row">
                     <td className="py-4 pr-4">
                       <PatientAvatar
                         patientId={a.patient_id}
