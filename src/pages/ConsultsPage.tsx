@@ -26,12 +26,37 @@ export function ConsultsPage() {
     if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
-      const { data } = await supabase
+      // Step 1: get patient IDs who have appointments at this hospital
+      const { data: apptRows } = await supabase
+        .from('appointments')
+        .select('patient_id')
+        .eq('hospital_id', hospitalId);
+
+      const patientIds = [...new Set((apptRows ?? []).map(r => r.patient_id))];
+      if (!patientIds.length) {
+        if (mounted) { setThreads([]); setLoading(false); }
+        return;
+      }
+
+      // Step 2: fetch consult threads for those patients
+      const { data: threadData } = await supabase
         .from('consult_threads')
-        .select('*, patient:profiles(first_name, last_name, phone)')
-        .eq('hospital_id', hospitalId)
+        .select('*')
+        .in('patient_id', patientIds)
         .order('updated_at', { ascending: false });
-      if (mounted) { setThreads(data ?? []); setLoading(false); }
+
+      // Step 3: fetch patient profiles separately (avoids RLS join issues)
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, phone')
+        .in('id', patientIds);
+
+      const profileMap = Object.fromEntries((profileData ?? []).map(p => [p.id, p]));
+
+      if (mounted) {
+        setThreads((threadData ?? []).map(t => ({ ...t, patient: profileMap[t.patient_id] ?? null })));
+        setLoading(false);
+      }
     })();
     return () => { mounted = false; };
   }, [hospitalId, hospitalLoading]);
