@@ -71,6 +71,7 @@ export function AppointmentsPage() {
         .from('appointments')
         .select('*')
         .eq('hospital_id', hospitalId)
+        .neq('status', 'cancelled')
         .order('starts_at', { ascending: true });
 
       if (!apptData || !mounted) { setLoading(false); return; }
@@ -96,8 +97,8 @@ export function AppointmentsPage() {
 
   const updateStatus = async (id: string, status: Appointment['status']) => {
     setUpdating(id);
-    await supabase.from('appointments').update({ status }).eq('id', id);
-    // Update UI regardless of what Supabase returns (RLS may suppress the response)
+    const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
+    if (error) console.error('Failed to update appointment:', error.message);
     if (status === 'cancelled') {
       setAppointments(prev => prev.filter(a => a.id !== id));
     } else {
