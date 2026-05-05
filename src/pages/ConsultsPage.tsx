@@ -253,14 +253,14 @@ export function ConsultsPage() {
               ) : (
                 <div className="px-6 py-4 border-t border-purple/[0.08]">
                   <div className="chat-input-bar">
-                    <textarea
-                      className="chat-input-textarea"
-                      rows={1}
+                    <input
+                      type="text"
+                      className="chat-input-field"
                       placeholder="Write a reply..."
                       value={reply}
                       onChange={e => setReply(e.target.value)}
                       onKeyDown={e => {
-                        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+                        if (e.key === 'Enter') { e.preventDefault(); sendReply(); }
                       }}
                     />
                     <button

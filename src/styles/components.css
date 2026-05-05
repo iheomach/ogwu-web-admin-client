@@ -79,21 +79,35 @@
 /* ─── Consult reply input bar (matches mobile chatInputBar) ──────────────── */
 
 .chat-input-bar {
-  @apply flex items-end gap-2 glass rounded-xl px-4 py-3
-         border border-purple/[0.08] focus-within:border-purple/30 transition-colors;
+  @apply flex items-stretch overflow-hidden transition-colors;
+  border: 1.5px solid rgba(69, 0, 80, 0.12);
+  border-radius: 999px;
+  background: rgba(69, 0, 80, 0.025);
 }
 
-.chat-input-textarea {
+.chat-input-bar:focus-within {
+  border-color: rgba(69, 0, 80, 0.3);
+}
+
+.chat-input-field {
   @apply flex-1 bg-transparent text-sm text-grey-900 placeholder:text-grey-300
-         outline-none resize-none leading-relaxed;
-  max-height: 120px;
+         outline-none px-5;
+  padding-top: 13px;
+  padding-bottom: 13px;
 }
 
 .chat-send-button {
-  @apply shrink-0 w-9 h-9 rounded-full flex items-center justify-center
-         bg-purple text-white transition-opacity;
+  @apply shrink-0 flex items-center justify-center text-white transition-opacity;
+  width: 54px;
+  background: rgba(69, 0, 80, 0.55);
+  border-radius: 0 999px 999px 0;
+  border-left: 1px solid rgba(69, 0, 80, 0.1);
+}
+
+.chat-send-button:hover:not(:disabled) {
+  background: rgba(69, 0, 80, 0.7);
 }
 
 .chat-send-button:disabled {
-  @apply opacity-35 cursor-not-allowed;
+  @apply opacity-40 cursor-not-allowed;
 }
