@@ -71,10 +71,24 @@ export function ConsultsPage() {
     (async () => {
       setFetchError(null);
 
+      // Step 1: get patient IDs who have appointments at this hospital
+      const { data: apptRows } = await supabase
+        .from('appointments')
+        .select('patient_id')
+        .eq('hospital_id', hospitalId);
+
+      const patientIds = [...new Set((apptRows ?? []).map(r => r.patient_id))];
+
+      if (!patientIds.length) {
+        if (mounted) { setThreads([]); setLoading(false); }
+        return;
+      }
+
+      // Step 2: fetch consult threads for those patients
       const { data: threadData, error: threadError } = await supabase
         .from('consult_threads')
         .select('*')
-        .eq('hospital_id', hospitalId)
+        .in('patient_id', patientIds)
         .order('updated_at', { ascending: false });
 
       if (threadError) {
@@ -82,8 +96,6 @@ export function ConsultsPage() {
         if (mounted) { setFetchError(threadError.message); setLoading(false); }
         return;
       }
-
-      const patientIds = [...new Set((threadData ?? []).map(r => r.patient_id))];
 
       const profileMap: Record<string, any> = {};
       if (patientIds.length) {
