@@ -8,7 +8,13 @@ Part of the broader Ogwu monorepo: [github.com/iheomach/ogwu](https://github.com
 
 ## Screenshots
 
-> Add screenshots here — see `SCREENSHOTS.md` in the main repo for the full shot list.
+| Dashboard | Patients |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Patients list](docs/screenshots/patients.png) |
+
+| Consults | Patient profile |
+|---|---|
+| ![Consults](docs/screenshots/consults.png) | ![Patient profile](docs/screenshots/patient-profile.png) |
 
 ---
 
