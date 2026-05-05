@@ -80,7 +80,19 @@ export function SettingsPage() {
               <Input label="Phone" placeholder="+234 ..." {...field('phone')} />
               <Input label="City / address" placeholder="Idi-Araba, Lagos" {...field('location')} />
               <Input label="State / province" placeholder="Lagos" {...field('admin1')} />
-              <Input label="Country" placeholder="Nigeria" {...field('country')} />
+              <div className="mb-4">
+                <label className="block text-[13px] font-medium text-grey-700 mb-1.5">Country</label>
+                <select
+                  value={settings.country}
+                  onChange={e => setSettings(prev => ({ ...prev, country: e.target.value }))}
+                  className="w-full glass rounded-md px-4 py-3 text-base text-grey-900 outline-none focus:border-purple focus:border-[1.5px] transition-colors appearance-none"
+                >
+                  <option value="">Select a country</option>
+                  <option value="NG">Nigeria</option>
+                  <option value="IN">India</option>
+                  <option value="US">United States</option>
+                </select>
+              </div>
               <Button onClick={handleSave} loading={saving} size="lg" className="w-full mt-2">
                 {saved ? 'Saved!' : 'Save changes'}
               </Button>
