@@ -198,10 +198,10 @@ export function ConsultsPage() {
     <AppShell>
       <PageHeader title="Consults" subtitle="Async consultation threads from patients." />
 
-      <div className="flex gap-5 h-[calc(100vh-160px)]">
+      <div className="flex h-[calc(100vh-160px)]">
 
         {/* ── Column 1: Patient list ── */}
-        <div className="w-56 shrink-0 flex flex-col gap-2">
+        <div className="w-56 shrink-0 flex flex-col gap-2 pr-5">
           <input
             type="search"
             placeholder="Search patients…"
@@ -252,8 +252,11 @@ export function ConsultsPage() {
           </div>
         </div>
 
+        {/* Divider 1 */}
+        <div className="w-px bg-purple/10 shrink-0 self-stretch mx-0" />
+
         {/* ── Column 2: Thread list ── */}
-        <div className="w-64 shrink-0 flex flex-col gap-2">
+        <div className="w-64 shrink-0 flex flex-col gap-2 px-5">
           {/* Thread list header with filters */}
           <div className="flex items-center justify-between h-[42px]">
             {selectedPatient ? (
@@ -278,7 +281,7 @@ export function ConsultsPage() {
                 </button>
               </>
             ) : (
-              <p className="text-sm text-grey-300">Select a patient</p>
+              <p className="text-sm text-grey-500">Choose a patient to see their threads</p>
             )}
           </div>
 
@@ -344,7 +347,7 @@ export function ConsultsPage() {
 
           <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-0.5">
             {!selectedPatient ? (
-              <p className="text-sm text-grey-300 pt-2">—</p>
+              <p className="text-sm text-grey-300 pt-2">Consult threads will appear here once you select a patient from the list.</p>
             ) : patientThreads.length === 0 ? (
               <p className="text-sm text-grey-300 pt-2">
                 {activeFilters > 0 ? 'No matches.' : 'No consults yet.'}
@@ -375,6 +378,9 @@ export function ConsultsPage() {
             )}
           </div>
         </div>
+
+        {/* Divider 2 */}
+        <div className="w-px bg-purple/10 shrink-0 self-stretch mr-5" />
 
         {/* ── Column 3: Thread detail ── */}
         <div className="flex-1 flex flex-col card overflow-hidden p-0">
