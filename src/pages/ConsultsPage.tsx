@@ -72,12 +72,16 @@ export function ConsultsPage() {
       setFetchError(null);
 
       // Step 1: get patient IDs who have appointments at this hospital
-      const { data: apptRows } = await supabase
+      console.log('[Consults] hospitalId:', hospitalId);
+      const { data: apptRows, error: apptError } = await supabase
         .from('appointments')
         .select('patient_id')
         .eq('hospital_id', hospitalId);
 
+      console.log('[Consults] apptRows:', apptRows, 'error:', apptError);
+
       const patientIds = [...new Set((apptRows ?? []).map(r => r.patient_id))];
+      console.log('[Consults] patientIds:', patientIds);
 
       if (!patientIds.length) {
         if (mounted) { setThreads([]); setLoading(false); }
@@ -91,6 +95,7 @@ export function ConsultsPage() {
         .in('patient_id', patientIds)
         .order('updated_at', { ascending: false });
 
+      console.log('[Consults] threadData:', threadData, 'error:', threadError);
       if (threadError) {
         console.error('[ConsultsPage] threads fetch error:', threadError);
         if (mounted) { setFetchError(threadError.message); setLoading(false); }
