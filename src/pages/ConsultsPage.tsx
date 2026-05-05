@@ -5,7 +5,6 @@ import { useHospital } from '../lib/useHospital';
 import type { ConsultThread, ConsultMessage } from '../lib/types';
 import { AppShell, PageHeader } from '../components/layout/AppShell';
 import { UrgencyBadge, StatusBadge } from '../components/ui/Badge';
-import { Button } from '../components/ui/Button';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', {
