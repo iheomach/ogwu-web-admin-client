@@ -50,13 +50,34 @@ export function PatientsPage() {
         return;
       }
 
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, phone, biological_sex, dob, triage_intakes(urgency, summary, updated_at)')
-        .in('id', patientIds)
-        .order('created_at', { ascending: false });
+      const [{ data: profileData }, { data: intakeData }] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('id, first_name, last_name, phone, biological_sex, dob')
+          .in('id', patientIds)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('triage_intakes')
+          .select('user_id, urgency, summary, updated_at')
+          .in('user_id', patientIds),
+      ]);
 
-      if (mounted) { setPatients(data ?? []); setLoading(false); }
+      // Map latest intake per patient
+      const intakeMap: Record<string, { urgency: string; summary: string | null; updated_at: string }> = {};
+      for (const intake of intakeData ?? []) {
+        const existing = intakeMap[intake.user_id];
+        if (!existing || intake.updated_at > existing.updated_at) {
+          intakeMap[intake.user_id] = intake;
+        }
+      }
+
+      if (mounted) {
+        setPatients((profileData ?? []).map(p => ({
+          ...p,
+          triage_intakes: intakeMap[p.id] ? [intakeMap[p.id]] : [],
+        })));
+        setLoading(false);
+      }
     })();
     return () => { mounted = false; };
   }, [hospitalId, hospitalLoading]);
