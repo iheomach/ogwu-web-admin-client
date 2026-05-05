@@ -252,21 +252,29 @@ export function ConsultsPage() {
                   <p className="text-sm text-grey-500">This conversation has ended.</p>
                 </div>
               ) : (
-                <div className="px-6 py-4 border-t border-purple/[0.08] flex gap-3 items-end">
-                  <textarea
-                    className="reply-textarea"
-                    rows={2}
-                    placeholder="Write a reply..."
-                    value={reply}
-                    onChange={e => setReply(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendReply();
-                    }}
-                  />
-                  <Button onClick={sendReply} loading={sending} size="md" className="shrink-0">
-                    <Send size={15} strokeWidth={2} />
-                    Send
-                  </Button>
+                <div className="px-6 py-4 border-t border-purple/[0.08]">
+                  <div className="chat-input-bar">
+                    <textarea
+                      className="chat-input-textarea"
+                      rows={1}
+                      placeholder="Write a reply..."
+                      value={reply}
+                      onChange={e => setReply(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+                      }}
+                    />
+                    <button
+                      onClick={sendReply}
+                      disabled={sending || !reply.trim()}
+                      className="chat-send-button"
+                    >
+                      {sending
+                        ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        : <Send size={16} strokeWidth={2} />
+                      }
+                    </button>
+                  </div>
                 </div>
               )}
             </>
