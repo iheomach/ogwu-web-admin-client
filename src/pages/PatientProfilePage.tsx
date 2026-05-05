@@ -14,7 +14,6 @@ type PatientProfile = {
   biological_sex: string | null;
   dob: string | null;
   triage_intakes?: Array<{
-    id: string;
     urgency: string;
     summary: string | null;
     answers: Array<{ q: string; a: string }> | null;
@@ -89,8 +88,8 @@ export function PatientProfilePage() {
           .order('starts_at', { ascending: false }),
         supabase
           .from('triage_intakes')
-          .select('id, urgency, summary, answers, updated_at, created_at')
-          .eq('patient_id', id)
+          .select('urgency, summary, answers, updated_at, created_at')
+          .eq('user_id', id)
           .order('created_at', { ascending: false }),
       ]);
       if (mounted) {
@@ -252,7 +251,7 @@ export function PatientProfilePage() {
                 <CardHeader title="Triage history" />
                 <div className="flex flex-col gap-3">
                   {patient.triage_intakes!.slice(1).map(intake => (
-                    <div key={intake.id} className="flex items-start gap-3 py-3 border-b border-purple/[0.05] last:border-0">
+                    <div key={intake.created_at} className="flex items-start gap-3 py-3 border-b border-purple/[0.05] last:border-0">
                       <UrgencyBadge urgency={intake.urgency as any} />
                       <div className="flex-1 min-w-0">
                         {intake.summary && (
