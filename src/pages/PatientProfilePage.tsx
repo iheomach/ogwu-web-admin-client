@@ -76,10 +76,10 @@ export function PatientProfilePage() {
     if (!id) return;
     let mounted = true;
     (async () => {
-      const [{ data: profileData }, { data: apptData }] = await Promise.all([
+      const [{ data: profileData }, { data: apptData }, { data: intakeData }] = await Promise.all([
         supabase
           .from('profiles')
-          .select('id, first_name, last_name, phone, biological_sex, dob, triage_intakes(id, urgency, summary, answers, updated_at, created_at)')
+          .select('id, first_name, last_name, phone, biological_sex, dob')
           .eq('id', id)
           .maybeSingle(),
         supabase
@@ -87,9 +87,14 @@ export function PatientProfilePage() {
           .select('id, starts_at, duration_minutes, status, meeting_url, reason')
           .eq('patient_id', id)
           .order('starts_at', { ascending: false }),
+        supabase
+          .from('triage_intakes')
+          .select('id, urgency, summary, answers, updated_at, created_at')
+          .eq('patient_id', id)
+          .order('created_at', { ascending: false }),
       ]);
       if (mounted) {
-        setPatient(profileData ?? null);
+        setPatient(profileData ? { ...profileData, triage_intakes: intakeData ?? [] } : null);
         setAppointments(apptData ?? []);
         setLoading(false);
       }
