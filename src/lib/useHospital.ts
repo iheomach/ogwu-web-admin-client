@@ -17,11 +17,14 @@ export function useHospital(): HospitalCtx {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setLoading(false); return; }
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('hospitals_directory')
         .select('id, name')
         .eq('admin_user_id', user.id)
         .maybeSingle();
+
+      if (error) console.error('[useHospital] lookup error:', error.message, '— uid:', user.id);
+      if (!data && !error) console.warn('[useHospital] no hospital row found for uid:', user.id, '— run: UPDATE hospitals_directory SET admin_user_id = \'' + user.id + '\' WHERE id = \'<your-hospital-id>\'');
 
       setHospitalId(data?.id ?? null);
       setHospitalName(data?.name ?? null);

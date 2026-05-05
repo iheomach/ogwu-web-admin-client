@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronRight, Send } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useHospital } from '../lib/useHospital';
@@ -13,6 +13,48 @@ function formatDate(iso: string) {
   });
 }
 
+function toRoman(n: number): string {
+  const vals = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+  const syms = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+  let out = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { out += syms[i]; n -= vals[i]; }
+  }
+  return out;
+}
+
+function conditionBase(thread: ConsultThread): string {
+  if (thread.title) return thread.title;
+  const s = (thread.intake_snapshot?.summary ?? '').trim();
+  if (s) return s.split(/\s+/).slice(0, 6).join(' ');
+  return 'New consult';
+}
+
+function buildThreadTitles(threads: ConsultThread[]): Map<string, string> {
+  // Group by patient_id + condition so different patients with similar conditions
+  // don't get numbered, but the same patient's follow-ups do.
+  const groups = new Map<string, ConsultThread[]>();
+  for (const t of threads) {
+    const key = `${t.patient_id}||${conditionBase(t)}`;
+    const g = groups.get(key) ?? [];
+    g.push(t);
+    groups.set(key, g);
+  }
+
+  const result = new Map<string, string>();
+  for (const [key, group] of groups) {
+    const base = key.split('||').slice(1).join('||');
+    if (group.length === 1) {
+      result.set(group[0].id, base);
+    } else {
+      // Sort ascending by created_at so oldest gets roman numeral I
+      const sorted = [...group].sort((a, b) => a.created_at.localeCompare(b.created_at));
+      sorted.forEach((t, i) => result.set(t.id, `${base} ${toRoman(i + 1)}`));
+    }
+  }
+  return result;
+}
+
 export function ConsultsPage() {
   const { hospitalId, loading: hospitalLoading } = useHospital();
   const [threads, setThreads] = useState<ConsultThread[]>([]);
@@ -20,28 +62,36 @@ export function ConsultsPage() {
   const [messages, setMessages] = useState<ConsultMessage[]>([]);
   const [reply, setReply] = useState('');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (hospitalLoading || !hospitalId) return;
     let mounted = true;
     (async () => {
-      // Fetch consult threads sent directly to this hospital
-      const { data: threadData } = await supabase
+      setFetchError(null);
+
+      const { data: threadData, error: threadError } = await supabase
         .from('consult_threads')
         .select('*')
         .eq('hospital_id', hospitalId)
         .order('updated_at', { ascending: false });
 
+      if (threadError) {
+        console.error('[ConsultsPage] threads fetch error:', threadError);
+        if (mounted) { setFetchError(threadError.message); setLoading(false); }
+        return;
+      }
+
       const patientIds = [...new Set((threadData ?? []).map(r => r.patient_id))];
 
-      // Fetch patient profiles separately to avoid RLS join issues
       const profileMap: Record<string, any> = {};
       if (patientIds.length) {
-        const { data: profileData } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('id, first_name, last_name, phone')
           .in('id', patientIds);
+        if (profileError) console.error('[ConsultsPage] profiles fetch error:', profileError);
         (profileData ?? []).forEach(p => { profileMap[p.id] = p; });
       }
 
@@ -52,6 +102,8 @@ export function ConsultsPage() {
     })();
     return () => { mounted = false; };
   }, [hospitalId, hospitalLoading]);
+
+  const threadTitles = useMemo(() => buildThreadTitles(threads), [threads]);
 
   const openThread = async (thread: ConsultThread) => {
     setSelected(thread);
@@ -88,6 +140,11 @@ export function ConsultsPage() {
             <div className="flex justify-center pt-8">
               <div className="spinner spinner--md" />
             </div>
+          ) : fetchError ? (
+            <div className="pt-4">
+              <p className="text-sm font-medium text-red-600">Failed to load</p>
+              <p className="text-xs text-grey-500 mt-1 break-all">{fetchError}</p>
+            </div>
           ) : threads.length === 0 ? (
             <p className="text-sm text-grey-500 pt-4">No consult threads yet.</p>
           ) : (
@@ -100,12 +157,17 @@ export function ConsultsPage() {
                   selected?.id === t.id ? 'border-purple/40 bg-purple-light/60' : '',
                 ].join(' ')}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <p className="text-sm font-medium text-grey-900 truncate">
-                    {t.patient?.first_name} {t.patient?.last_name}
+                <div className="flex items-center justify-between mb-1 gap-2">
+                  <p className="text-sm font-medium text-grey-900 truncate leading-snug">
+                    {threadTitles.get(t.id) ?? conditionBase(t)}
                   </p>
                   <ChevronRight size={14} className="text-grey-300 shrink-0" />
                 </div>
+                {(t.patient?.first_name || t.patient?.last_name) && (
+                  <p className="text-xs text-grey-500 mb-1.5 truncate">
+                    {t.patient.first_name} {t.patient.last_name}
+                  </p>
+                )}
                 <div className="flex items-center gap-2">
                   <UrgencyBadge urgency={t.urgency} />
                   <StatusBadge status={t.status} />
@@ -132,13 +194,14 @@ export function ConsultsPage() {
               <div className="px-6 py-4 border-b border-purple/[0.08] flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-grey-900">
-                    {selected.patient?.first_name} {selected.patient?.last_name}
+                    {threadTitles.get(selected.id) ?? conditionBase(selected)}
                   </p>
-                  {selected.intake_snapshot?.summary && (
-                    <p className="text-xs text-grey-500 mt-0.5 max-w-md truncate">
-                      {selected.intake_snapshot.summary}
-                    </p>
-                  )}
+                  <p className="text-xs text-grey-500 mt-0.5">
+                    {selected.patient?.first_name} {selected.patient?.last_name}
+                    {selected.intake_snapshot?.summary && (
+                      <span className="ml-1">· {selected.intake_snapshot.summary.slice(0, 80)}{selected.intake_snapshot.summary.length > 80 ? '…' : ''}</span>
+                    )}
+                  </p>
                 </div>
                 <UrgencyBadge urgency={selected.urgency} />
               </div>
@@ -165,8 +228,13 @@ export function ConsultsPage() {
                 })}
               </div>
 
-              {/* Reply input */}
-              {selected.status === 'open' && (
+              {/* Reply input / closed notice */}
+              {selected.status === 'closed' ? (
+                <div className="px-6 py-4 border-t border-purple/[0.08] flex items-center gap-2.5">
+                  <div className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <p className="text-sm text-grey-500">This conversation has ended.</p>
+                </div>
+              ) : (
                 <div className="px-6 py-4 border-t border-purple/[0.08] flex gap-3 items-end">
                   <textarea
                     className="reply-textarea"

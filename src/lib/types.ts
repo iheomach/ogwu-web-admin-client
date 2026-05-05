@@ -35,8 +35,10 @@ export type Appointment = {
 export type ConsultThread = {
   id: string;
   patient_id: string;
-  provider_type: 'onboarded' | 'external';
+  provider_type: 'onboarded' | 'external' | 'hospital';
   doctor_id: string | null;
+  hospital_id: string | null;
+  title: string | null;
   locale: string | null;
   urgency: UrgencyTier;
   status: 'open' | 'closed';
