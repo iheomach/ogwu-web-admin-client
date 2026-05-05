@@ -35,7 +35,7 @@ export default {
       },
       boxShadow: {
         glass: '0 4px 14px rgba(69,0,80,0.07)',
-        purple: '0 6px 12px rgba(69,0,80,0.28)',
+        purple: '0 2px 6px rgba(69,0,80,0.10)',
       },
       fontFamily: {
         sans: [
