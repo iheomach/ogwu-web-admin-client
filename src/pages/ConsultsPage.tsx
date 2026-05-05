@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronRight, Send } from 'lucide-react';
+import { ArrowRight, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useHospital } from '../lib/useHospital';
 import type { ConsultThread, ConsultMessage } from '../lib/types';
@@ -270,7 +270,7 @@ export function ConsultsPage() {
                     >
                       {sending
                         ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        : <Send size={16} strokeWidth={2} />
+                        : <ArrowRight size={18} strokeWidth={2.5} />
                       }
                     </button>
                   </div>
