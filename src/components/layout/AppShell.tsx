@@ -3,6 +3,7 @@ import { AlertTriangle, X } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { useHospital } from '../../lib/useHospital';
 import { useEmergencyAlerts, type EmergencyAlert } from '../../lib/useEmergencyAlerts';
+import { usePushSubscription } from '../../lib/usePushSubscription';
 
 function EmergencyBanner({ alert, onAcknowledge }: { alert: EmergencyAlert; onAcknowledge: (id: string) => void }) {
   const name = [alert.patient?.first_name, alert.patient?.last_name].filter(Boolean).join(' ') || 'A patient';
@@ -37,6 +38,7 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   const { hospitalId } = useHospital();
   const { alerts, acknowledge } = useEmergencyAlerts(hospitalId);
+  usePushSubscription(hospitalId);
 
   return (
     <div className="flex flex-col min-h-screen bg-bg">
