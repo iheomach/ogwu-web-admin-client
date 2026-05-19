@@ -97,15 +97,37 @@ export function AppointmentsPage() {
 
   const updateStatus = async (id: string, status: Appointment['status']) => {
     setUpdating(id);
-    const { data: updated, error } = await supabase
-      .from('appointments').update({ status }).eq('id', id).select('id, status');
+    const appt = appointments.find(a => a.id === id);
+
+    const { error } = await supabase.from('appointments').update({ status }).eq('id', id);
     if (error) console.error('Update error:', error.message);
-    else console.log('Rows updated:', updated);
-    if (status === 'cancelled') {
+
+    if (status === 'cancelled' && appt) {
+      // Find the most recent open thread for this patient + hospital and notify them
+      const { data: threads } = await supabase
+        .from('consult_threads')
+        .select('id')
+        .eq('patient_id', appt.patient_id)
+        .eq('hospital_id', appt.hospital_id)
+        .eq('status', 'open')
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (threads && threads.length > 0) {
+        const threadId = threads[0].id;
+        await supabase.from('consult_messages').insert({
+          thread_id: threadId,
+          sender_role: 'system',
+          body: `Your appointment on ${formatDateTime(appt.starts_at)} has been cancelled by the hospital. Please contact us or book a new appointment through the app.`,
+        });
+        await supabase.from('consult_threads').update({ status: 'closed' }).eq('id', threadId);
+      }
+
       setAppointments(prev => prev.filter(a => a.id !== id));
     } else {
       setAppointments(prev => prev.map(a => (a.id === id ? { ...a, status } : a)));
     }
+
     setUpdating(null);
     setCancelTarget(null);
   };
