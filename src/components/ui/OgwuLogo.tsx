@@ -3,7 +3,7 @@ export function OgwuLogo({ size = 36 }: { size?: number }) {
     <img
       src="/ogwu-mark.png"
       alt="Ogwu"
-      style={{borderRadius: size * 0.22, display: 'block', flexShrink: 0 }}
+      style={{borderRadius: size * 0.022, display: 'block', flexShrink: 0 }}
     />
   );
 }
