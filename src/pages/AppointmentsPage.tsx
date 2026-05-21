@@ -32,7 +32,7 @@ function CancelDialog({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-grey-900/30 backdrop-blur-sm" onClick={onDismiss} />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onDismiss} />
       <div className="relative card p-6 w-full max-w-sm">
         <h2 className="text-base font-bold text-grey-900 mb-1">Cancel appointment?</h2>
         <p className="text-sm text-grey-500 mb-6">

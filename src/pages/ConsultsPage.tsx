@@ -229,8 +229,8 @@ export function ConsultsPage() {
                   className={[
                     'w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 transition-colors',
                     selectedPatient?.id === p.id
-                      ? 'bg-purple-light/80 border border-purple/30'
-                      : 'hover:bg-purple-light/40 border border-transparent',
+                      ? 'bg-[rgba(123,77,217,0.22)] border border-purple/30'
+                      : 'hover:bg-[rgba(123,77,217,0.10)] border border-transparent',
                   ].join(' ')}
                 >
                   <div className="w-7 h-7 rounded-full bg-purple/10 flex items-center justify-center shrink-0">

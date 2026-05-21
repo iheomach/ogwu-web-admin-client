@@ -5,22 +5,24 @@ export default {
     extend: {
       colors: {
         purple: {
-          DEFAULT: '#450050',
-          light: '#F0EBF1',
-          mid: '#DED1E0',
+          DEFAULT: '#7b4dd9',
+          glow: '#b8a0f5',
+          light: 'rgba(123,77,217,0.12)',
+          mid: 'rgba(123,77,217,0.25)',
         },
-        bg: '#FAF7FB',
+        bg: '#080412',
+        bgMid: '#0f0620',
         grey: {
-          900: '#111111',
-          700: '#374151',
-          500: '#6B7280',
-          300: '#D1D5DB',
-          100: '#F5F5F5',
+          900: 'rgba(255,255,255,0.93)',
+          700: 'rgba(255,255,255,0.72)',
+          500: 'rgba(255,255,255,0.48)',
+          300: 'rgba(255,255,255,0.28)',
+          100: 'rgba(255,255,255,0.07)',
         },
-        error: { DEFAULT: '#EF4444', light: 'rgba(239,68,68,0.07)' },
-        warning: { DEFAULT: '#F59E0B', light: 'rgba(245,158,11,0.07)' },
-        urgent: { DEFAULT: '#F97316', light: 'rgba(249,115,22,0.07)' },
-        success: { DEFAULT: '#16A34A', light: 'rgba(22,163,74,0.07)' },
+        error: { DEFAULT: '#FF6B6B', light: 'rgba(255,107,107,0.18)' },
+        warning: { DEFAULT: '#FFB347', light: 'rgba(255,179,71,0.18)' },
+        urgent: { DEFAULT: '#FF8C42', light: 'rgba(255,140,66,0.18)' },
+        success: { DEFAULT: '#4ADE80', light: 'rgba(74,222,128,0.18)' },
         /* Landing-page specific tokens */
         lp: {
           heading: '#1A1A2E',
@@ -32,10 +34,11 @@ export default {
         sm: '8px',
         md: '14px',
         lg: '20px',
+        xl: '28px',
       },
       boxShadow: {
-        glass: '0 4px 14px rgba(69,0,80,0.07)',
-        purple: '0 2px 6px rgba(69,0,80,0.10)',
+        glass: '0 8px 24px rgba(0,0,0,0.35)',
+        purple: '0 6px 14px rgba(123,77,217,0.40)',
       },
       fontFamily: {
         sans: [

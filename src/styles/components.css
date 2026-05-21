@@ -20,11 +20,11 @@
 }
 
 .table-thead-row {
-  @apply border-b border-purple/[0.08];
+  @apply border-b border-white/[0.10];
 }
 
 .table-tbody-row {
-  @apply border-b border-purple/[0.04] last:border-0;
+  @apply border-b border-white/[0.06] last:border-0;
 }
 
 /* ─── Search input ────────────────────────────────────────────────────────── */
@@ -80,13 +80,15 @@
 
 .chat-input-bar {
   @apply flex items-stretch overflow-hidden transition-colors;
-  border: 1.5px solid rgba(69, 0, 80, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.20);
   border-radius: 999px;
-  background: rgba(69, 0, 80, 0.025);
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .chat-input-bar:focus-within {
-  border-color: rgba(69, 0, 80, 0.3);
+  border-color: rgba(255, 255, 255, 0.40);
 }
 
 .chat-input-field {
@@ -99,13 +101,13 @@
 .chat-send-button {
   @apply shrink-0 flex items-center justify-center text-white transition-opacity;
   width: 54px;
-  background: rgba(69, 0, 80, 0.55);
+  background: #7b4dd9;
   border-radius: 0 999px 999px 0;
-  border-left: 1px solid rgba(69, 0, 80, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .chat-send-button:hover:not(:disabled) {
-  background: rgba(69, 0, 80, 0.7);
+  background: #9b6dff;
 }
 
 .chat-send-button:disabled {
