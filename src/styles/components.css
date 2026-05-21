@@ -3,6 +3,7 @@
    TSX files reference these class names only.
 ──────────────────────────────────────────────────────────────────────────── */
 
+
 /* ─── Loading Spinner ─────────────────────────────────────────────────────── */
 
 .spinner {
@@ -30,7 +31,12 @@
 /* ─── Search input ────────────────────────────────────────────────────────── */
 
 .search-input {
-  @apply glass rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @apply rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none
          placeholder:text-grey-300 transition-colors
          focus:border-purple focus:border-[1.5px];
 }
@@ -62,7 +68,12 @@
 }
 
 .chat-bubble--patient {
-  @apply glass text-grey-900;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  @apply text-grey-900;
 }
 
 .chat-bubble--system {
