@@ -229,8 +229,8 @@ export function ConsultsPage() {
                   className={[
                     'w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 transition-colors',
                     selectedPatient?.id === p.id
-                      ? 'bg-[rgba(123,77,217,0.22)] border border-purple/30'
-                      : 'hover:bg-[rgba(123,77,217,0.10)] border border-transparent',
+                      ? 'bg-purple-light/80 border border-purple/30'
+                      : 'hover:bg-purple-light/40 border border-transparent',
                   ].join(' ')}
                 >
                   <div className="w-7 h-7 rounded-full bg-purple/10 flex items-center justify-center shrink-0">
@@ -294,6 +294,7 @@ export function ConsultsPage() {
                   value={sortKey}
                   onChange={e => setSortKey(e.target.value as SortKey)}
                   className="w-full glass rounded-md px-2.5 py-1.5 text-xs text-grey-900 outline-none focus:border-purple focus:border-[1.5px] appearance-none"
+                  style={{ colorScheme: 'dark' }}
                 >
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>

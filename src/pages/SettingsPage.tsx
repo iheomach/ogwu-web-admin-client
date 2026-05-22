@@ -86,6 +86,7 @@ export function SettingsPage() {
                   value={settings.country}
                   onChange={e => setSettings(prev => ({ ...prev, country: e.target.value }))}
                   className="w-full glass rounded-md px-4 py-3 text-base text-grey-900 outline-none focus:border-purple focus:border-[1.5px] transition-colors appearance-none"
+                  style={{ colorScheme: 'dark' }}
                 >
                   <option value="">Select a country</option>
                   <option value="NG">Nigeria</option>

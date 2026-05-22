@@ -80,7 +80,7 @@ function Hero() {
         </h1>
         <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-10 lp-text-body">
           Ogwu triages patients before they reach you. The hospital portal gives your team real-time
-          visibility into incoming consults, appointment requests, and patient health summaries — so
+          visibility into incoming consults, appointment requests, and patient health summaries, so
           you can respond faster and with full context.
         </p>
 
@@ -183,7 +183,7 @@ const FEATURES = [
   {
     icon: ClipboardList,
     title: 'Pre-triaged patients',
-    body: 'Every patient arrives with an urgency rating, symptom summary, and AI-recommended specialty — before your team lifts a finger.',
+    body: 'Every patient arrives with an urgency rating, symptom summary, and AI-recommended specialty. Before your team lifts a finger.',
   },
   {
     icon: MessageSquare,
@@ -203,7 +203,7 @@ const FEATURES = [
   {
     icon: Globe,
     title: 'Multilingual patients',
-    body: 'Ogwu supports English, Igbo, Yoruba, Hausa, French, and Spanish — your portal reflects that context.',
+    body: 'Ogwu supports English, Igbo, Yoruba, Hausa, French, and Spanish. Your portal reflects that context.',
   },
   {
     icon: Shield,
@@ -293,7 +293,7 @@ function Testimonial() {
       <div className="max-w-2xl mx-auto text-center">
         <div className="lp-quote-card">
           <p className="text-xl font-medium leading-relaxed mb-6 lp-text-heading">
-            "Ogwu means medicine in Igbo. We built it so that anyone, anywhere in Nigeria, can get the right care — fast."
+            "Ogwu means medicine in Igbo. We built it so that anyone, anywhere in Nigeria, can get the right care. Fast."
           </p>
           <div className="flex items-center justify-center gap-3">
             <div className="lp-avatar-initial">R</div>
@@ -414,7 +414,7 @@ function Footer() {
     <footer className="lp-footer">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col items-center md:items-start gap-1">
-          <img src="/ogwu-logo-mark.png" alt="Ogwu" className="lp-footer-mark" />
+          <img src="/ogwu-mark.png" alt="Ogwu" className="lp-footer-mark" />
           <p className="text-xs mt-1 lp-text-body">AI-powered triage for modern healthcare.</p>
         </div>
 

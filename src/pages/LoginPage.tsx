@@ -23,8 +23,12 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-bg flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Background glow orbs — give the glass card something to blur */}
+      <div className="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(69,0,80,0.12) 0%, transparent 65%)', filter: 'blur(60px)' }} />
+      <div className="absolute bottom-[-40px] right-[-60px] w-[350px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(69,0,80,0.08) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+
+      <div className="w-full max-w-sm relative">
 
         {/* Brand */}
         <div className="mb-10">

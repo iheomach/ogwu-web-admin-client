@@ -8,9 +8,9 @@ import { Card, CardHeader } from '../components/ui/Card';
 import { UrgencyBadge, StatusBadge } from '../components/ui/Badge';
 
 const statVariants = {
-  default: { box: 'bg-purple/[0.15]', icon: '#b8a0f5' },
-  orange:  { box: 'bg-urgent/[0.15]', icon: '#FF8C42' },
-  green:   { box: 'bg-success/[0.15]', icon: '#4ADE80' },
+  default: { box: 'bg-purple/[0.07]', icon: '#450050' },
+  orange:  { box: 'bg-urgent/[0.07]', icon: '#F97316' },
+  green:   { box: 'bg-success/[0.07]', icon: '#16A34A' },
 } as const;
 
 type StatVariant = keyof typeof statVariants;

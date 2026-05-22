@@ -17,9 +17,9 @@
 }
 
 .lp-navbar--scrolled {
-  background: rgba(250, 247, 251, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(250, 247, 251, 0.80);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom-color: rgba(69, 0, 80, 0.07);
 }
 
@@ -85,15 +85,15 @@
   @apply relative rounded-2xl overflow-hidden text-left;
   border: 1px solid rgba(69, 0, 80, 0.12);
   box-shadow: 0 24px 60px rgba(69, 0, 80, 0.14);
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .lp-browser-chrome {
   @apply px-4 py-3 border-b flex items-center gap-2;
   border-color: rgba(69, 0, 80, 0.08);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .lp-browser-addressbar {
@@ -182,9 +182,9 @@
 
 .lp-feature-card {
   @apply p-6 rounded-2xl transition-shadow hover:shadow-md;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(69, 0, 80, 0.08);
   box-shadow: 0 4px 14px rgba(69, 0, 80, 0.05);
 }
@@ -222,7 +222,9 @@
 
 .lp-quote-card {
   @apply p-10 rounded-2xl;
-  background: #F3EAF4;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(69, 0, 80, 0.10);
 }
 
@@ -239,9 +241,9 @@
 
 .lp-form-card {
   @apply rounded-2xl p-8 flex flex-col gap-4;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(69, 0, 80, 0.09);
   box-shadow: 0 8px 28px rgba(69, 0, 80, 0.07);
 }
@@ -256,7 +258,7 @@
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid rgba(69, 0, 80, 0.14);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.70);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #1A1A2E;
@@ -270,9 +272,9 @@
 
 .lp-success-card {
   @apply text-center p-10 rounded-2xl;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(69, 0, 80, 0.1);
 }
 

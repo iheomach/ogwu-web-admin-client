@@ -23,9 +23,9 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-60 shrink-0 flex flex-col h-screen sticky top-0 bg-bgMid border-r border-white/[0.10]">
+    <aside className="w-60 shrink-0 bg-purple flex flex-col h-screen sticky top-0">
       {/* Brand */}
-      <div className="px-5 py-4 border-b border-white/[0.10]">
+      <div className="px-5 py-4 border-b border-purple/10 bg-white">
         <img
           src="/ogwu-logo-horizontal.png"
           alt="Ogwu"
@@ -51,7 +51,7 @@ export function Sidebar() {
       </nav>
 
       {/* Logout */}
-      <div className="px-3 py-4 border-t border-white/[0.10]">
+      <div className="px-3 py-4 border-t border-white/10">
         <button onClick={handleLogout} className="nav-item w-full">
           <LogOut size={17} strokeWidth={1.8} />
           <span>Log out</span>

@@ -3,8 +3,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title ?? 'Emergency Alert', {
       body: data.body ?? '',
-      icon: '/ogwu-logo-mark.png',
-      badge: '/ogwu-logo-mark.png',
+      icon: '/ogwu-mark.png',
+      badge: '/ogwu-mark.png',
       tag: 'emergency',
       requireInteraction: true,
     }),
