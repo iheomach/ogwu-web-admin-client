@@ -10,6 +10,8 @@ import { ConsultsPage } from './pages/ConsultsPage';
 import { PatientsPage } from './pages/PatientsPage';
 import { PatientProfilePage } from './pages/PatientProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsOfServicePage } from './pages/TermsOfServicePage';
 
 function Spinner() {
   return (
@@ -35,6 +37,8 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
         <Route
           path="/login"
           element={session ? <Navigate to="/dashboard" replace /> : <LoginPage />}

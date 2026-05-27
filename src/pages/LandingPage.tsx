@@ -419,9 +419,9 @@ function Footer() {
         </div>
 
         <div className="flex items-center gap-6 text-xs lp-text-body">
-          <Link to="#" className="hover:underline">Privacy Policy</Link>
-          <Link to="#" className="hover:underline">Terms of Service</Link>
-          <Link to="#" className="hover:underline">Contact</Link>
+          <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
+          <Link to="/terms" className="hover:underline">Terms of Service</Link>
+          <a href="mailto:iheoma@ogwu.app" className="hover:underline">Contact</a>
         </div>
 
         <p className="text-xs lp-text-body">© {new Date().getFullYear()} Ogwu Health</p>
