@@ -15,7 +15,7 @@ export function PrivacyPolicyPage() {
 
       <main className="max-w-3xl mx-auto px-6 pt-28 pb-24">
         <h1 className="text-4xl font-bold tracking-tight mb-2 lp-text-heading">Privacy Policy</h1>
-        <p className="text-sm lp-text-body mb-10">Last updated: May 2026</p>
+        <p className="text-sm lp-text-body mb-10">Last updated: June 2026</p>
 
         <div className="prose prose-sm max-w-none space-y-8 lp-text-body leading-relaxed">
 
@@ -39,6 +39,7 @@ export function PrivacyPolicyPage() {
             <ul className="list-disc pl-5 space-y-1">
               <li>Hospital or clinic name, address, and contact details during onboarding</li>
               <li>Provider account credentials (email and password, or phone OTP)</li>
+              <li>Patient mobile phone numbers, collected at registration and used for authentication (OTP) and account identification</li>
               <li>Patient health records and documents uploaded through the platform</li>
               <li>Triage responses, consultation notes, and appointment details</li>
             </ul>
@@ -84,8 +85,7 @@ export function PrivacyPolicyPage() {
             <ul className="list-disc pl-5 space-y-2 mt-3">
               <li><span className="font-medium">Supabase</span> — database hosting and authentication (EU and US regions)</li>
               <li><span className="font-medium">AWS (Amazon Web Services)</span> — document storage (S3), text extraction (Textract), serverless processing (Lambda), and transactional email (SES)</li>
-              <li><span className="font-medium">OpenAI</span> — AI language model inference and document embedding; data submitted is subject to OpenAI's API data usage policy</li>
-              <li><span className="font-medium">AWS Comprehend Medical</span> — medical entity extraction for urgency classification</li>
+              <li><span className="font-medium">OpenAI</span> — AI language model inference and document embedding; data submitted is subject to <a href="https://openai.com/policies/api-data-usage-policies" className="underline" target="_blank" rel="noopener noreferrer">OpenAI's API data usage policy</a></li>
               <li><span className="font-medium">Google</span> — Calendar API for appointment slot availability and booking; Google Meet link generation</li>
               <li><span className="font-medium">Railway</span> — backend application hosting</li>
               <li><span className="font-medium">Expo / EAS</span> — mobile application distribution</li>
