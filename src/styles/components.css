@@ -30,9 +30,14 @@
 /* ─── Search input ────────────────────────────────────────────────────────── */
 
 .search-input {
-  @apply glass rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none
+  @apply rounded-md px-4 py-3 text-sm w-full max-w-sm outline-none
          placeholder:text-grey-300 transition-colors
          focus:border-purple focus:border-[1.5px];
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(69, 0, 80, 0.10);
+  box-shadow: 0 4px 20px rgba(69, 0, 80, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* ─── Stat card icon box ──────────────────────────────────────────────────── */
@@ -62,7 +67,12 @@
 }
 
 .chat-bubble--patient {
-  @apply glass text-grey-900;
+  @apply text-grey-900;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(69, 0, 80, 0.10);
+  box-shadow: 0 4px 20px rgba(69, 0, 80, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .chat-bubble--system {

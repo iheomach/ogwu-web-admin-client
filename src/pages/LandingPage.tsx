@@ -1,174 +1,392 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  ClipboardList,
-  MessageSquare,
+  Activity,
+  ArrowRight,
   CalendarCheck,
-  Users,
-  Globe,
+  CheckCircle2,
+  ClipboardList,
+  Clock3,
+  Globe2,
+  Languages,
+  LayoutDashboard,
+  LockKeyhole,
+  MessageSquare,
   Shield,
+  Stethoscope,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
-// ─── Navbar ────────────────────────────────────────────────────────────────
+
+interface TriagePatient {
+  name: string;
+  age: number;
+  concern: string;
+  urgency: string;
+  time: string;
+  color: 'urgent' | 'review' | 'routine';
+  language: string;
+  specialty: string;
+  summary: string;
+  action: string;
+}
+
+const NAV_LINKS = [
+  { label: 'Platform', id: 'platform' },
+  { label: 'Workflow', id: 'workflow' },
+  { label: 'Security', id: 'security' },
+  { label: 'Access', id: 'cta' },
+] as const;
+
+const TRIAGE_QUEUE: TriagePatient[] = [
+  {
+    name: 'Adaeze Obi',
+    age: 42,
+    concern: 'Chest tightness and shortness of breath after climbing stairs',
+    urgency: 'High',
+    time: '2 min ago',
+    color: 'urgent',
+    language: 'Igbo',
+    specialty: 'Cardiology',
+    summary: 'Igbo-speaking patient reports chest tightness, breathlessness, and mild dizziness. Ogwu flags red-flag symptoms and prepares a cardiology handoff for urgent nurse review.',
+    action: 'Escalate for same-day review and confirm vitals before appointment booking.',
+  },
+  {
+    name: 'Musa Bello',
+    age: 31,
+    concern: 'Fever, headache, and body aches after travel to Kano',
+    urgency: 'Review',
+    time: '8 min ago',
+    color: 'review',
+    language: 'Hausa',
+    specialty: 'General medicine',
+    summary: 'Hausa-speaking patient describes fever, headache, fatigue, and recent travel. Ogwu captures travel context and recommends clinician review for infection screening.',
+    action: 'Send fever protocol, ask about malaria testing, and offer next available GP slot.',
+  },
+  {
+    name: 'Temitope Adeyemi',
+    age: 36,
+    concern: 'Child with wheezing at night and missed inhaler refill',
+    urgency: 'Routine',
+    time: '14 min ago',
+    color: 'routine',
+    language: 'Yoruba',
+    specialty: 'Pediatrics',
+    summary: 'Yoruba-speaking parent asks about nighttime wheezing and an inhaler refill for their child. Ogwu captures age, medication context, and warning signs for pediatric review.',
+    action: 'Send pediatric breathing checklist and offer the next family medicine slot.',
+  },
+];
+
+const STATS = [
+  { value: '< 3 min', label: 'Typical guided intake' },
+  { value: '6', label: 'Patient languages supported' },
+  { value: '24/7', label: 'AI intake before front desk review' },
+  { value: '1 view', label: 'Consults, bookings, and summaries' },
+] as const;
+
+const FEATURES = [
+  {
+    icon: ClipboardList,
+    title: 'Pre-triaged patient handoff',
+    body: 'Every request arrives with symptoms, urgency, history prompts, and recommended next action so staff can prioritize quickly.',
+  },
+  {
+    icon: MessageSquare,
+    title: 'Async consult workspace',
+    body: 'Keep patient messages, clinical context, and internal decisions in one clean thread instead of scattered calls and texts.',
+  },
+  {
+    icon: CalendarCheck,
+    title: 'Appointment command center',
+    body: 'Review requests, confirm visits, reschedule slots, and attach Google Meet links without moving between tools.',
+  },
+  {
+    icon: Globe2,
+    title: 'Built for multilingual care',
+    body: 'Ogwu captures context from English, Igbo, Yoruba, Hausa, French, and Spanish, then presents it clearly to your team.',
+  },
+  {
+    icon: LayoutDashboard,
+    title: 'Hospital-grade visibility',
+    body: 'Leadership can see consult volume, patient flow, response bottlenecks, and operational health from one dashboard.',
+  },
+  {
+    icon: Shield,
+    title: 'Protected access model',
+    body: 'The portal is designed around hospital-scoped access, row-level data boundaries, and least-privilege staff workflows.',
+  },
+] as const;
+
+const TRUST_ITEMS = [
+  { icon: LockKeyhole, title: 'Hospital-scoped access', body: 'Each hospital only sees its own patients, consults, appointments, and staff records.' },
+  { icon: Shield, title: 'Role-aware workspace', body: 'Designed for admins, clinicians, and coordinators to operate with the right level of access.' },
+  { icon: Activity, title: 'Operational audit trail', body: 'Critical actions can be reviewed across patient flow, consult handling, and appointment updates.' },
+] as const;
+
+const PRODUCT_CARDS = [
+  {
+    title: 'Patient AI intake',
+    eyebrow: 'Mobile assistant',
+    visual: 'intake',
+    src: '/landing-assets/ogwu-ai-intake-platform.png',
+    description: 'A conversational intake that turns patient language into structured clinical context.',
+    detail: 'The B2C Ogwu app guides patients through symptoms, timing, severity, medications, and care preferences. It supports multilingual intake, tool status messages, and triage completion so hospital teams receive something cleaner than a raw chat transcript.',
+    bullets: ['Guided symptom capture', 'Multilingual context', 'Urgency and specialty suggestions'],
+  },
+  {
+    title: 'Hospital handoff queue',
+    eyebrow: 'Provider workspace',
+    visual: 'queue',
+    src: '/landing-assets/ogwu-hospital-operations.png',
+    description: 'A hospital-facing queue for consults, appointment requests, patient summaries, and response status.',
+    detail: 'The admin portal turns incoming patient requests into actionable rows with urgency, summary, language, suggested specialty, and next action. Staff can see who needs review, who can be booked, and which consults need follow-up without digging through messages.',
+    bullets: ['Triage queue', 'Patient summary cards', 'Role-scoped hospital access'],
+  },
+  {
+    title: 'Care coordination',
+    eyebrow: 'Appointments and consults',
+    visual: 'care',
+    src: '/landing-assets/ogwu-mobile-care-flow.png',
+    description: 'Appointment booking, async consult threads, hospital search, and calendar handoff in one flow.',
+    detail: 'Ogwu connects the patient app to hospitals: send health summaries, search hospitals, create consult threads, book appointments, and add confirmed visits to Google or Apple Calendar with meeting links attached.',
+    bullets: ['Hospital search and routing', 'Async provider replies', 'Google and Apple Calendar handoff'],
+  },
+] as const;
+
+const COUNTRIES = [
+  'Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Ethiopia', 'Tanzania',
+  'Uganda', 'Rwanda', 'Senegal', "Côte d'Ivoire", 'Other',
+];
+
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function ProductVisual({ type, src, title }: { type: string; src: string; title: string }) {
+  return (
+    <div className={`lp-product-visual lp-product-visual--${type}`}>
+      <img src={src} alt={`${title} Ogwu product preview`} className="lp-product-shot" />
+      <div className="lp-phone-frame">
+        <div className="lp-phone-speaker" />
+        <div className="lp-phone-card lp-phone-card--primary">How long have you had these symptoms?</div>
+        <div className="lp-phone-card">Fever started yesterday evening.</div>
+        <div className="lp-phone-card lp-phone-card--mint">Ogwu is checking red flags...</div>
+      </div>
+      <div className="lp-product-panel">
+        <span>{type === 'queue' ? 'Hospital queue' : type === 'care' ? 'Care plan' : 'AI intake'}</span>
+        <strong>{type === 'queue' ? '12 open consults' : type === 'care' ? 'Appointment confirmed' : 'Urgency: review today'}</strong>
+        <div className="lp-visual-lines"><i /><i /><i /></div>
+      </div>
+    </div>
+  );
+}
+
+function ExpandableProductCard({ card }: { card: typeof PRODUCT_CARDS[number] }) {
+  const [active, setActive] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const onKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && setActive(false);
+    const onPointerDown = (event: MouseEvent | TouchEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) setActive(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('touchstart', onPointerDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('touchstart', onPointerDown);
+    };
+  }, [active]);
+
+  return (
+    <>
+      {active && <div className="lp-expandable-overlay" />}
+      {active && (
+        <div className="lp-expandable-stage">
+          <article ref={cardRef} className="lp-expandable-modal">
+            <ProductVisual type={card.visual} src={card.src} title={card.title} />
+            <div className="lp-expandable-body">
+              <button className="lp-expandable-close" onClick={() => setActive(false)} aria-label="Close card">+</button>
+              <p className="lp-eyebrow">{card.eyebrow}</p>
+              <h3>{card.title}</h3>
+              <p>{card.detail}</p>
+              <ul>
+                {card.bullets.map((item) => <li key={item}><CheckCircle2 size={16} /> {item}</li>)}
+              </ul>
+            </div>
+          </article>
+        </div>
+      )}
+      <article className="lp-expandable-card" onClick={() => setActive(true)}>
+        <ProductVisual type={card.visual} src={card.src} title={card.title} />
+        <div className="lp-expandable-card-copy">
+          <p>{card.description}</p>
+          <h3>{card.title}</h3>
+        </div>
+        <button aria-label={`Open ${card.title}`}>+</button>
+      </article>
+    </>
+  );
+}
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <header className={`lp-navbar ${scrolled ? 'lp-navbar--scrolled' : ''}`}>
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5">
+      <div className="lp-nav-inner">
+        <button className="lp-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <img src="/ogwu-logo-horizontal.png" alt="Ogwu" className="lp-nav-logo" />
-          <span className="lp-for-hospitals-badge">for Hospitals</span>
-        </div>
+          <span className="lp-for-hospitals-badge">Hospital OS</span>
+        </button>
 
-        {/* Nav links */}
-        <nav className="hidden md:flex items-center gap-8">
-          {[
-            { label: 'Features', id: 'features' },
-            { label: 'How it works', id: 'how-it-works' },
-            { label: 'Contact', id: 'cta' },
-          ].map(({ label, id }) => (
+        <nav className="lp-nav-links">
+          {NAV_LINKS.map(({ label, id }) => (
             <button key={id} onClick={() => scrollTo(id)} className="lp-nav-link">
               {label}
             </button>
           ))}
         </nav>
 
-        {/* CTA */}
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/login')} className="lp-nav-signin">
-            Sign in
-          </button>
-          <button
-            onClick={() => document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })}
-            className="lp-nav-cta"
-          >
-            Request access
-          </button>
+        <div className="lp-nav-actions">
+          <button onClick={() => navigate('/login')} className="lp-nav-signin">Sign in</button>
+          <button onClick={() => scrollTo('cta')} className="lp-nav-cta">Request access</button>
         </div>
       </div>
     </header>
   );
 }
 
-// ─── Hero ──────────────────────────────────────────────────────────────────
-function Hero() {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
+function TriageConsole() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = TRIAGE_QUEUE[activeIndex];
+  const signals = [
+    { label: 'Symptoms parsed', value: active.color === 'urgent' ? '18' : active.color === 'review' ? '12' : '7', icon: Activity },
+    { label: 'Suggested specialty', value: active.specialty, icon: Stethoscope },
+    { label: 'Language', value: active.language, icon: Languages },
+  ];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % TRIAGE_QUEUE.length);
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
-    <section className="pt-36 pb-24 px-6 text-center relative overflow-hidden">
-      <div className="lp-hero-glow" />
+    <div className="lp-console-shell">
+      <div className="lp-console-topbar">
+        <div className="lp-window-dots"><span /><span /><span /></div>
+        <div className="lp-console-url">hospital.ogwu.app/live-intake</div>
+        <div className="lp-live-pill"><span /> Live triage</div>
+      </div>
 
-      <div className="relative max-w-3xl mx-auto">
-        <h1 className="text-5xl md:text-[56px] font-bold leading-[1.08] tracking-[-1.5px] mb-5 lp-text-heading">
-          The command center for every patient Ogwu sends your way.
-        </h1>
-        <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-10 lp-text-body">
-          Ogwu triages patients before they reach you. The hospital portal gives your team real-time
-          visibility into incoming consults, appointment requests, and patient health summaries, so
-          you can respond faster and with full context.
-        </p>
+      <div className="lp-console-grid">
+        <aside className="lp-console-sidebar">
+          <div className="lp-console-logo-row">
+            <span className="lp-mini-mark">O</span>
+            <span>Ogwu</span>
+          </div>
+          {['Dashboard', 'Intake queue', 'Consults', 'Appointments'].map((item, index) => (
+            <button key={item} className={`lp-console-nav ${index === 1 ? 'lp-console-nav--active' : ''}`}>
+              <span />{item}
+            </button>
+          ))}
+        </aside>
 
-        <div className="flex items-center justify-center gap-4">
-          <button onClick={() => scrollTo('cta')} className="lp-btn-primary">
-            Request access
-          </button>
-          <button onClick={() => scrollTo('how-it-works')} className="lp-btn-outline">
-            See how it works
-          </button>
-        </div>
-
-        {/* Dashboard mockup */}
-        <div className="mt-16 relative">
-          <div className="lp-mockup-glow" />
-          <div className="lp-browser-frame">
-            {/* Browser chrome */}
-            <div className="lp-browser-chrome">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-400 opacity-80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-400 opacity-80" />
-                <div className="w-3 h-3 rounded-full bg-green-400 opacity-80" />
-              </div>
-              <div className="lp-browser-addressbar">
-                hospital.ogwu.app/dashboard
-              </div>
-            </div>
-
-            {/* Dashboard preview */}
-            <div className="flex" style={{ minHeight: '240px' }}>
-              {/* Sidebar */}
-              <div className="lp-mock-sidebar">
-                <div className="flex items-center gap-2 px-2 py-2 mb-3">
-                  <span className="text-[11px] font-bold tracking-[2px] uppercase text-white/80">Ogwu</span>
-                </div>
-                {['Dashboard', 'Appointments', 'Consults', 'Patients'].map((item, i) => (
-                  <div
-                    key={item}
-                    className={`lp-mock-nav-item ${i === 0 ? 'lp-mock-nav-item--active' : 'lp-mock-nav-item--inactive'}`}
-                  >
-                    <div className="w-3 h-3 rounded-sm opacity-60 bg-current" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              {/* Main */}
-              <div className="lp-mock-main">
-                <p className="text-[11px] font-bold tracking-wide uppercase mb-3 lp-text-body">Dashboard</p>
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  {["Today's appointments", 'Open consults', 'Upcoming (7d)'].map((label, i) => (
-                    <div key={label} className="lp-mock-stat-card">
-                      <p className="text-[9px] uppercase tracking-wide mb-1 lp-text-body">{label}</p>
-                      <p className="text-xl font-bold lp-text-heading">{['4', '12', '31'][i]}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="lp-mock-table">
-                  {['Adaeze Obi', 'Emeka Nwosu', 'Fatima Bello'].map((name) => (
-                    <div key={name} className="lp-mock-table-row">
-                      <span className="font-medium lp-text-heading">{name}</span>
-                      <span className="lp-mock-badge">confirmed</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        <main className="lp-console-main">
+          <div className="lp-console-header">
+            <div>
+              <p className="lp-console-kicker">Care queue</p>
+              <h3>Incoming patients</h3>
             </div>
           </div>
+
+          <div className="lp-patient-list">
+            {TRIAGE_QUEUE.map((patient, index) => (
+              <button
+                key={patient.name}
+                onClick={() => setActiveIndex(index)}
+                className={`lp-patient-row ${activeIndex === index ? 'lp-patient-row--active' : ''}`}
+              >
+                <div>
+                  <div className="lp-patient-name">{patient.name}, {patient.age}</div>
+                  <div className="lp-patient-concern">{patient.concern}</div>
+                </div>
+                <span className={`lp-urgency lp-urgency--${patient.color}`}>{patient.urgency}</span>
+              </button>
+            ))}
+          </div>
+        </main>
+
+        <aside className="lp-console-insight">
+          <p className="lp-console-kicker">AI summary</p>
+          <h4>{active.name}</h4>
+          <p>{active.summary}</p>
+          <div className="lp-signal-grid">
+            {signals.map(({ label, value, icon: Icon }) => (
+              <div key={label} className="lp-signal-card">
+                <Icon size={15} />
+                <span>{label}</span>
+                <strong>{value}</strong>
+              </div>
+            ))}
+          </div>
+          <div className="lp-next-action">
+            <Clock3 size={16} /> {active.action}
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="lp-hero">
+      <div className="lp-orb lp-orb-a" />
+      <div className="lp-orb lp-orb-b" />
+      <div className="lp-hero-inner">
+        <div className="lp-hero-copy">
+          <h1>Turn every patient message into a clear next step.</h1>
+          <p>
+            Ogwu gives hospitals a polished operating layer for AI triage, consults, appointments, and patient context, so teams can move from symptom to care without losing the thread.
+          </p>
+          <div className="lp-hero-actions">
+            <button onClick={() => scrollTo('cta')} className="lp-btn-primary">Request access <ArrowRight size={16} /></button>
+            <button onClick={() => scrollTo('platform')} className="lp-btn-outline">Explore the platform</button>
+          </div>
+          <div className="lp-hero-proof">
+            {['Clinical intake', 'Hospital queue', 'Patient follow-up'].map((item) => (
+              <span key={item}><CheckCircle2 size={15} /> {item}</span>
+            ))}
+          </div>
+        </div>
+        <div className="lp-hero-visual">
+          <TriageConsole />
         </div>
       </div>
     </section>
   );
 }
 
-// ─── Stats Bar ─────────────────────────────────────────────────────────────
-const STATS = [
-  { value: '< 3 min', label: 'Average triage time' },
-  { value: '6 languages', label: 'Supported by Ogwu AI' },
-  { value: 'Real-time', label: 'Consult & appointment sync' },
-  { value: 'Zero setup', label: 'Calendar & Meet links included' },
-];
-
 function StatsBar() {
   return (
     <section className="lp-stats-bar">
-      <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="lp-stats-inner">
         {STATS.map(({ value, label }) => (
-          <div key={label} className="text-center">
+          <div key={label} className="lp-stat-card">
             <p className="lp-stat-value">{value}</p>
             <p className="lp-stat-label">{label}</p>
           </div>
@@ -178,58 +396,32 @@ function StatsBar() {
   );
 }
 
-// ─── Features ─────────────────────────────────────────────────────────────
-const FEATURES = [
-  {
-    icon: ClipboardList,
-    title: 'Pre-triaged patients',
-    body: 'Every patient arrives with an urgency rating, symptom summary, and AI-recommended specialty. Before your team lifts a finger.',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Async consult threads',
-    body: 'Patients can message your team directly through Ogwu. Respond on your schedule without phone tag.',
-  },
-  {
-    icon: CalendarCheck,
-    title: 'Appointment management',
-    body: 'Confirm, reschedule, or cancel appointments with one click. Google Meet links are generated automatically.',
-  },
-  {
-    icon: Users,
-    title: 'Full patient profiles',
-    body: 'View demographics, medical history, past triage intakes, and AI session summaries in one place.',
-  },
-  {
-    icon: Globe,
-    title: 'Multilingual patients',
-    body: 'Ogwu supports English, Igbo, Yoruba, Hausa, French, and Spanish. Your portal reflects that context.',
-  },
-  {
-    icon: Shield,
-    title: 'Secure by default',
-    body: 'Built on Supabase with row-level security. Each hospital sees only its own data.',
-  },
-];
+function SectionIntro({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
+  return (
+    <div className="lp-section-intro">
+      <p className="lp-eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      {body && <p>{body}</p>}
+    </div>
+  );
+}
 
 function Features() {
   return (
-    <section id="features" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="lp-eyebrow">Features</p>
-          <h2 className="lp-section-heading">Everything your team needs, nothing they don't.</h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <section id="platform" className="lp-section lp-platform-section">
+      <div className="lp-container">
+        <SectionIntro
+          eyebrow="Platform"
+          title="A patient flow layer that feels like a product, not a spreadsheet."
+          body="Ogwu packages the messy front door of healthcare into a calm, high-signal workspace for hospital teams."
+        />
+        <div className="lp-feature-grid">
           {FEATURES.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="lp-feature-card">
-              <div className="lp-feature-icon-box">
-                <Icon size={18} strokeWidth={1.8} className="text-purple" />
-              </div>
-              <p className="text-sm font-bold mb-2 lp-text-heading">{title}</p>
-              <p className="text-sm leading-relaxed lp-text-body">{body}</p>
-            </div>
+            <article key={title} className="lp-feature-card">
+              <div className="lp-feature-icon-box"><Icon size={19} /></div>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
           ))}
         </div>
       </div>
@@ -237,79 +429,67 @@ function Features() {
   );
 }
 
-// ─── How It Works ──────────────────────────────────────────────────────────
-const STEPS = [
-  { n: 1, title: 'Patient opens Ogwu', desc: 'Describes their symptoms to the AI assistant in any supported language.' },
-  { n: 2, title: 'Ogwu triages', desc: 'Assigns urgency, extracts symptoms, recommends a specialty, and suggests a care pathway.' },
-  { n: 3, title: 'Patient books or consults', desc: 'Requests an appointment at your hospital or starts an async consult thread.' },
-  { n: 4, title: 'Your team sees it instantly', desc: 'The hospital portal surfaces the request with full context: urgency, summary, patient history.' },
-  { n: 5, title: 'You respond', desc: 'Confirm the appointment, reply to the consult, or refer the patient. Done.' },
-];
-
-function HowItWorks() {
+function Workflow() {
   return (
-    <section id="how-it-works" className="lp-hiw-section py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="lp-eyebrow">How it works</p>
-          <h2 className="lp-section-heading">From symptom to care in five steps.</h2>
-        </div>
-
-        {/* Desktop: horizontal with connecting line */}
-        <div className="hidden md:block relative">
-          <div className="lp-step-connector" />
-          <div className="relative grid grid-cols-5 gap-4" style={{ zIndex: 1 }}>
-            {STEPS.map(({ n, title, desc }) => (
-              <div key={n} className="flex flex-col items-center text-center">
-                <div className="lp-step-number">{n}</div>
-                <p className="text-sm font-bold mb-1.5 lp-text-heading">{title}</p>
-                <p className="text-xs leading-relaxed lp-text-body">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile: vertical */}
-        <div className="md:hidden flex flex-col gap-6">
-          {STEPS.map(({ n, title, desc }) => (
-            <div key={n} className="flex gap-4 items-start">
-              <div className="lp-step-number--sm">{n}</div>
-              <div>
-                <p className="text-sm font-bold mb-1 lp-text-heading">{title}</p>
-                <p className="text-sm leading-relaxed lp-text-body">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Testimonial ──────────────────────────────────────────────────────────
-function Testimonial() {
-  return (
-    <section className="py-24 px-6">
-      <div className="max-w-2xl mx-auto text-center">
-        <div className="lp-quote-card">
-          <p className="text-xl font-medium leading-relaxed mb-6 lp-text-heading">
-            "Ogwu means medicine in Igbo. We built it so that anyone, anywhere in Nigeria, can get the right care. Fast."
+    <section id="workflow" className="lp-section lp-workflow-section">
+      <div className="lp-container lp-workflow-layout">
+        <div className="lp-workflow-copy">
+          <p className="lp-eyebrow">Workflow</p>
+          <h2 className="lp-section-title">Designed around the real path from concern to care.</h2>
+          <p className="lp-section-body">
+            Patients do not arrive as clean rows in a database. Ogwu turns unstructured symptoms into a guided queue your team can actually operate.
           </p>
-          <div className="flex items-center justify-center gap-3">
-            <div className="lp-avatar-initial">R</div>
-            <p className="text-sm font-semibold lp-text-heading">Richard, Founder</p>
-          </div>
+        </div>
+
+        <div className="lp-product-card-grid" aria-label="Ogwu product offerings">
+          {PRODUCT_CARDS.map((card) => <ExpandableProductCard key={card.title} card={card} />)}
         </div>
       </div>
     </section>
   );
 }
 
-// ─── CTA / Access Request Form ────────────────────────────────────────────
-const COUNTRIES = [
-  'Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Ethiopia', 'Tanzania',
-  'Uganda', 'Rwanda', 'Senegal', "Côte d'Ivoire", 'Other',
-];
+function Security() {
+  return (
+    <section id="security" className="lp-section lp-security-section">
+      <div className="lp-container lp-security-card">
+        <div>
+          <p className="lp-eyebrow">Security and operations</p>
+          <h2 className="lp-section-title">Built for hospitals that need clarity, boundaries, and speed.</h2>
+          <p className="lp-section-body">
+            The portal keeps sensitive workflows organized around hospital ownership, staff roles, and operational accountability.
+          </p>
+        </div>
+        <div className="lp-trust-grid">
+          {TRUST_ITEMS.map(({ icon: Icon, title, body }) => (
+            <article key={title} className="lp-trust-item">
+              <Icon size={18} />
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FounderNote() {
+  return (
+    <section className="lp-founder-section">
+      <div className="lp-founder-card">
+        <div className="lp-founder-mark">Ọ</div>
+        <p>
+          “Ogwu means medicine in Igbo. The vision is simple: make the first step toward care feel intelligent, human, and accessible before a patient ever reaches the front desk.”
+        </p>
+        <div>
+          <strong>Iheoma Omorotionmwan</strong>
+          <span>Founder, Ogwu Health</span>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function CTASection() {
   const [form, setForm] = useState({
@@ -340,25 +520,26 @@ function CTASection() {
   };
 
   return (
-    <section id="cta" className="lp-cta-section py-24 px-6">
-      <div className="max-w-xl mx-auto">
-        <div className="text-center mb-10">
-          <p className="lp-eyebrow">Get started</p>
-          <h2 className="lp-section-heading mb-3">Ready to bring your hospital onto Ogwu?</h2>
-          <p className="lp-text-body">
-            Access is currently by invitation. Fill in your details and we'll be in touch.
+    <section id="cta" className="lp-cta-section">
+      <div className="lp-container lp-cta-layout">
+        <div className="lp-cta-copy">
+          <p className="lp-eyebrow">Private access</p>
+          <h2>Bring Ogwu into your hospital workflow.</h2>
+          <p>
+            Tell us about your hospital and the patient flow you want to improve. We will reach out with access details and onboarding next steps.
           </p>
+          <div className="lp-cta-list">
+            <span><CheckCircle2 size={16} /> Hospital workspace setup</span>
+            <span><CheckCircle2 size={16} /> Intake and appointment flow review</span>
+            <span><CheckCircle2 size={16} /> Staff access planning</span>
+          </div>
         </div>
 
         {status === 'success' ? (
           <div className="lp-success-card">
-            <div className="lp-success-icon">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M4 10l4.5 4.5L16 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <p className="text-lg font-bold mb-1 lp-text-heading">Request received!</p>
-            <p className="text-sm lp-text-body">We'll review your details and reach out shortly.</p>
+            <div className="lp-success-icon"><CheckCircle2 size={22} /></div>
+            <h3>Request received</h3>
+            <p>We will review your details and reach out shortly.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="lp-form-card">
@@ -383,23 +564,17 @@ function CTASection() {
 
             <div>
               <label className="lp-form-label">Country</label>
-              <select
-                className="lp-form-input"
-                value={form.country}
-                onChange={set('country')}
-                required
-              >
+              <select className="lp-form-input" value={form.country} onChange={set('country')} required>
                 <option value="" disabled>Select a country</option>
                 {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
-            {status === 'error' && (
-              <p className="text-sm text-red-500">{errorMsg}</p>
-            )}
+            {status === 'error' && <p className="lp-form-error">{errorMsg}</p>}
 
             <button type="submit" disabled={status === 'loading'} className="lp-form-submit">
               {status === 'loading' ? 'Submitting…' : 'Request access'}
+              <ArrowRight size={16} />
             </button>
           </form>
         )}
@@ -408,29 +583,25 @@ function CTASection() {
   );
 }
 
-// ─── Footer ────────────────────────────────────────────────────────────────
 function Footer() {
   return (
     <footer className="lp-footer">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex flex-col items-center md:items-start gap-1">
-          <img src="/ogwu-mark.png" alt="Ogwu" className="lp-footer-mark" />
-          <p className="text-xs mt-1 lp-text-body">AI-powered triage for modern healthcare.</p>
+      <div className="lp-footer-inner">
+        <div>
+          <img src="/ogwu-logo-horizontal.png" alt="Ogwu" className="lp-footer-logo" />
+          <p>AI-powered intake and hospital operations for modern care teams.</p>
         </div>
-
-        <div className="flex items-center gap-6 text-xs lp-text-body">
-          <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
-          <Link to="/terms" className="hover:underline">Terms of Service</Link>
-          <a href="mailto:iheoma@ogwu.app" className="hover:underline">Contact</a>
+        <div className="lp-footer-links">
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
+          <a href="mailto:iheoma@ogwu.app">Contact</a>
         </div>
-
-        <p className="text-xs lp-text-body">© {new Date().getFullYear()} Ogwu Health</p>
+        <p>© {new Date().getFullYear()} Ogwu Health</p>
       </div>
     </footer>
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────
 export function LandingPage() {
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -440,8 +611,9 @@ export function LandingPage() {
       <Hero />
       <StatsBar />
       <Features />
-      <HowItWorks />
-      <Testimonial />
+      <Workflow />
+      <Security />
+      <FounderNote />
       <CTASection />
       <Footer />
     </div>
